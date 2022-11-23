@@ -1,5 +1,4 @@
 # Pharaoh Script
-A FREE Grand Piece Online Script
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/main/main", true))()
