@@ -1,8 +1,10 @@
-# Pharaoh script
+# Pharaoh Script
 A FREE Grand Piece Online Script
 
 # Script
-[Contribution guidelines for this project]a
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/main/main", true))()
+```
 
 # Features:
 Auto Farm (At fishman island till level max)<br />
