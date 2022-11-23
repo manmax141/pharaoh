@@ -7,8 +7,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/mai
 # About this Script
 This is a Free Grand Piece Online Script That is
 associated with a key system that you need to get
-through this link 
-```https://link-hub.net/543894/pharaoh-script```
+through this lin<br/>
+https://link-hub.net/543894/pharaoh-script
 
 # Features:
 Auto Farm (At fishman island till level max)<br />
