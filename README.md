@@ -1,6 +1,7 @@
 # Pharaoh script
 A FREE Grand Piece Online Script
-Features:
+
+# Features:
 Auto Farm (At fishman island till level max)
 Auto Add Stat Points
 Auto Rejoin
