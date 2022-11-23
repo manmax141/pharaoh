@@ -8,4 +8,4 @@ Auto Rejoin\n
 Auto Rejoin (Server Code)\n
 Dungeon Farm (Coming Soon)\n
 
-# I May Release TPBypass if this script gets famous
+# Releasing TPBypass if this script gets famous
