@@ -1,7 +1,7 @@
 # Pharaoh Script
 
-```lua
-[https://link-hub.net/543894/pharaoh-script]
+```
+https://link-hub.net/543894/pharaoh-script
 ```
 
 # About this Script
