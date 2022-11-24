@@ -5,7 +5,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/mai
 ```
 
 # About this Script
-This is a Free Grand Piece Online Script , DeepWooken Anti Wipe Script
+This is a Free Grand Piece Online Script
 
 # Features:
 Auto Farm (At fishman island till level max)<br />
