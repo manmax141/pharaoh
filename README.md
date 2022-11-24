@@ -1,6 +1,6 @@
 # Pharaoh Script
 
-```javascript
+```lua
 https://link-hub.net/543894/pharaoh-script
 ```
 
