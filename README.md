@@ -1,14 +1,11 @@
 # Pharaoh Script
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/main/main", true))()
+https://link-hub.net/543894/pharaoh-script
 ```
 
 # About this Script
-This is a Free Grand Piece Online Script That is
-associated with a key system that you need to get
-through this link<br/>
-https://link-hub.net/543894/pharaoh-script
+This is a Free Grand Piece Online Script , DeepWooken Anti Wipe Script
 
 # Features:
 Auto Farm (At fishman island till level max)<br />
