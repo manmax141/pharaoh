@@ -1,7 +1,7 @@
 # Pharaoh Script
 
 ```lua
-https://link-hub.net/543894/pharaoh-script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/manmax141/pharaoh/main/main", true))()
 ```
 
 # About this Script
