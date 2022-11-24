@@ -1,6 +1,6 @@
 # Pharaoh Script
 
-```c++
+```javascript
 https://link-hub.net/543894/pharaoh-script
 ```
 
