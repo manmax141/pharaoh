@@ -15,7 +15,6 @@ Auto Rejoin (Server Code)<br />
 Dungeon Farm (Coming Soon)<br />
 
 # What i might release
-Deepwoken Script + Anti Wipe
 Releasing TPBypass if this script gets famous (GPO)
 
 # Discord Server
