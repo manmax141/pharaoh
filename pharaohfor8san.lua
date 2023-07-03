@@ -2362,9 +2362,12 @@ local s, e = pcall(function()
                 end 
                 
             end
-
+            
             if horoAttackCooldown then horoAttackCooldown = false
                 CleanUp()
+                delay(25, function()
+                    horoAttackCooldown = true
+                end)
 
                 local args = {
                     [1] = "Mini Hollow Barrage"
