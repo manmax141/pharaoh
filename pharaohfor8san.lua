@@ -2398,8 +2398,8 @@ local s, e = pcall(function()
 
                 local h = workspace.Effects.MiniHollow.Hitbox
 
-               delay(3, function()
                 local effects = workspace.Effects
+               delay(3, function()
                 effects.Parent = game.ReplicatedStorage
                end)
                 for i = 0,seg or Configs.HoroAttackSegements do
