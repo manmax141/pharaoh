@@ -2803,6 +2803,7 @@ local s, e = pcall(function()
         }
 
         function WebhookItem(itemName)
+            if itemName:find("Cyborg") then return end
             local str = game.Players.LocalPlayer.Name.." Got a drop"
             if legs[itemName] then
                 str = "@everyone "..game.Players.LocalPlayer.Name.." Got a drop"
