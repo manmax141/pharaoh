@@ -1,4 +1,4 @@
-repeat task.wait(1) until game.Players.LocalPlayer ~= nil
+repeat task.wait(1) until game.Players.LocalPlayer ~= nil and game.Players.LocalPlayer.Character ~= nil
 local s, e = pcall(function()
     local gs = game:GetService("GuiService")
     gs.ErrorMessageChanged:Connect(function()
@@ -462,7 +462,7 @@ local s, e = pcall(function()
                             Args.Default = false
                         else
                             if Args.Callback then
-                                Args.Callback(Args.Default)
+                                task.spawn(Args.Callback, Args.Default)
                             end
                         end
                         Args.Callback = Args.Callback or Library.BlankFunction
@@ -2251,12 +2251,12 @@ local s, e = pcall(function()
         Tabs.AutoFarm:CreateDivider()
         Tabs.AutoFarm:CreateToggle("AutoFarm", {
             Name = "Auto Farm (Fishman Only)",
-            Default = false,
+            Default = Configs.AutoFarm,
             Callback = AutoFarm
         })
         Tabs.AutoFarm:CreateToggle("AutoQuest",{
             Name = "Auto Quest",
-            Default = false
+            Default = Configs.AutoQuest
         })
         local toolsDropdown = Tabs.AutoFarm:CreateDropdown("SelectedItemForAutoFarm",{
             Name = "Selected Item",
@@ -2275,7 +2275,7 @@ local s, e = pcall(function()
         })
         Tabs.AutoFarm:CreateToggle("FastAttackAutoFarm",{
             Name = "Fast Attack (Depends on ping)",
-            Default = false
+            Default = Configs.FastAttackAutoFarm
         })
         Tabs.AutoFarm:CreateDivider()
         Tabs.AutoFarm:CreateSlider("TweenSpeed", {
@@ -2289,7 +2289,7 @@ local s, e = pcall(function()
         
         Tabs.AutoStats:CreateToggle("AutoStats", {
             Name = "Auto Stats",
-            Default = false,
+            Default = Configs.AutoStats,
             Callback = AutoStats
         })
         Tabs.AutoStats:CreateDropdown("SelectedStat",{
@@ -2675,7 +2675,7 @@ local s, e = pcall(function()
             end
          
             if state then
-
+                
                 if GetDist(hrp, FactoryPosition, 45) then
                     -- fight factory people
                     Start()
@@ -2870,7 +2870,7 @@ local s, e = pcall(function()
         
         Tabs.AutoFactory:CreateToggle("AutoFactory", {
             Name = "Auto Factory",
-            Default = false,
+            Default = Configs.AutoFactory,
             Callback = AutoFactory
         })
         Tabs.AutoFactory:CreateDivider()
@@ -2922,7 +2922,7 @@ local s, e = pcall(function()
         })
         Tabs.AutoPica:CreateToggle("AutoPica", {
             Name = "Auto Pica",
-            Default = false,
+            Default = Configs.AutoPica,
             Callback = AutoPica
         })
     end
