@@ -2417,6 +2417,7 @@ local s, e = pcall(function()
         end
 
         function AutoFactory(state)
+            if game.ReplicatedStorage.reservedCode.Value == "" then return end
             local char = player.Character or player.CharacterAdded:Wait()
             local hrp = char:WaitForChild("HumanoidRootPart")
             local hum = char:WaitForChild("Humanoid")
@@ -2608,6 +2609,7 @@ local s, e = pcall(function()
         end
 
         function AutoPica(state)
+            if game.ReplicatedStorage.reservedCode.Value == "" then return end
             if state then
 
                 local char = player.Character or player.CharacterAdded:Wait()
