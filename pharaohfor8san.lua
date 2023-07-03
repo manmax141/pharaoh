@@ -2350,7 +2350,7 @@ local s, e = pcall(function()
                         v:Destroy()
                     end
                 end 
-
+                
             end
 
             local function FireAll(args)
@@ -2384,9 +2384,13 @@ local s, e = pcall(function()
                     }
                 }
 
-                FireAll(args)
+                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                    if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
+                        v:FireServer(unpack(args))
+                    end
+                end 
                 
-                task.wait(.5)
+                task.wait(.65)
 
                 -- delay(1, function()
                 --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
@@ -2394,8 +2398,10 @@ local s, e = pcall(function()
 
                 local h = workspace.Effects.MiniHollow.Hitbox
 
+               delay(3, function()
                 local effects = workspace.Effects
                 effects.Parent = game.ReplicatedStorage
+               end)
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
@@ -2405,7 +2411,11 @@ local s, e = pcall(function()
                             [3] = hrp
                         }
                         
-                        FireAll(args)
+                        for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                            if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
+                                v:FireServer(unpack(args))
+                            end
+                        end 
                     end)
                 end
 
