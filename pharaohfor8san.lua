@@ -1834,11 +1834,12 @@ local s, e = pcall(function()
             UI.Obj.Keybinds.Visible = false
         end
     end
+    
     local player = game.Players.LocalPlayer
     local ts = game:GetService("TweenService")
     local rs = game:GetService("RunService")
     local vim = game:GetService("VirtualInputManager")
-
+    local vu = game:GetService("VirtualUser")
     local char = player.Character or player.CharacterAdded:Wait()
     task.wait(3)
     local function BypassErrorBan()
@@ -1850,7 +1851,12 @@ local s, e = pcall(function()
          end
     end
     BypassErrorBan()
-   
+    game:GetService("Players").LocalPlayer.Idled:connect(function()
+        vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+    
     if game.PlaceId == 3978370137 then
         -- first sea
         createLibrary()
@@ -2222,6 +2228,285 @@ local s, e = pcall(function()
             Values = {"Strength", "Stamina", "Defense", "Gun Mastery", "Sword Mastery", "Black Leg Mastery", "Devil Fruit Mastery"},
             DefaultItemSelected = "Strength",
             SelectType = "Single"
+        })
+    elseif game.PlaceId == 7465136166 then
+        createLibrary()
+
+        do -- Hitbox Extender
+            local o = getrenv()._G.hitbox.start
+            getrenv()._G.hitbox.start = function(...)
+                local args = {...}
+                if Configs.HitboxExtender then
+                    args[3] = Vector3.new(30,30,30)
+                end
+                return o(unpack(args))
+            end
+        end
+
+        function GetDist(p1, p2, range)
+            p1 = typeof(p1) == "Vector3" and p1 or p1.Position
+            p2 = typeof(p2) == "Vector3" and p2 or p2.Position
+                                        
+           if range then
+            return (p1-p2).magnitude <= range
+           else
+            return (p1-p2).magnitude
+           end
+        end
+    
+        function TPToFishman()
+            local char = player.Character or player.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart")
+        
+            hrp.CFrame = CFrame.new(5639.86865, -92.762001, -16611.4688)
+        end
+    
+        local currentTween
+        function Tween(...)
+            if currentTween then
+                currentTween:Cancel()
+            end
+            currentTween = ts:Create(...)
+            return currentTween
+        end
+        
+        local bvName = tostring(math.random(1,135135135))
+        function Velocity(state)
+            local char = player.Character or player.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart")
+
+            if state == "Create" then
+               if hrp:FindFirstChild(bvName) then
+                    hrp:FindFirstChild(bvName):Destroy()
+               end
+               local bv = Instance.new("BodyVelocity")
+               bv.Name = bvName
+               bv.Parent = hrp
+               bv.MaxForce = Vector3.new(1,1,1)*math.huge
+               bv.Velocity = Vector3.zero
+            elseif state == "Remove" then
+                if hrp:FindFirstChild(bvName) then
+                    hrp:FindFirstChild(bvName):Destroy()
+                end
+            end
+        end
+
+        function NoClip(state)
+            local char = player.Character or player.CharacterAdded:Wait()
+            
+            for _,v in pairs(char:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = not state
+                end
+            end
+        end
+        
+        function GetPlayerItems()
+            local tools = {}
+            local char = player.Character or player.CharacterAdded:Wait()
+
+            for _,v in pairs(player.Backpack:GetChildren()) do
+                if v:IsA("Tool") then
+                    table.insert(tools, v.Name)
+                end
+            end
+            for _,v in pairs(char:GetChildren()) do
+                if v:IsA("Tool") then
+                    table.insert(tools, v.Name)
+                end
+            end
+
+            return tools
+        end
+        
+        function AutoFactory(state)
+            local char = player.Character or player.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart")
+            local hum = char:WaitForChild("Humanoid")
+            local canAttack = true
+
+            local function Start()
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hrp = char:WaitForChild("HumanoidRootPart")
+                local hum = char:WaitForChild("Humanoid")
+                
+                local function AutoAttack(v, k)
+                    if canAttack then canAttack = false
+                        if Configs.FastAttackAutoFactory then
+                                for i = 1, 4 do 
+
+                                    local ohTable1 = {
+                                        [1] = "swingsfx",
+                                        [2] = k,
+                                        [3] = i,
+                                        [4] = "Ground"
+                                    }
+
+                                   task.spawn(function()
+                                    game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
+                                   end)
+                                        
+                                    local ohTable1 = {
+                                        [1] = "damage",
+                                        [2] = v,
+                                        [3] = k,
+                                        [4] = {
+                                            [1] = i,
+                                            [2] = "Ground",
+                                            [3] = k
+                                        },
+                                        [5] = true,
+                                        ["aircombo"] = "Ground"
+                                    }
+                                    task.spawn(function()
+
+                                    game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
+                                    end)
+                                     task.wait(.15)
+                                end
+                            else
+                                for i = 1,4 do 
+                                    vim:SendMouseButtonEvent(0, 1, 0, true, game, 1)
+                                    task.wait(.35)
+                                end
+                        end
+                        
+                        task.wait(1.35)
+                        canAttack = true
+                    end
+                end
+                local equipCooldown = true
+                local function EquipTool()
+                    if equipCooldown then
+                        equipCooldown = false
+                        local char = player.Character or player.CharacterAdded:Wait()
+                        local hrp = char:WaitForChild("HumanoidRootPart")
+                        local hum = char:WaitForChild("Humanoid")
+                        
+                        if Configs.SelectedItemForAutoFactory then
+                            if player.Backpack:FindFirstChild(Configs.SelectedItemForAutoFactory) then
+                                hum:EquipTool(player.Backpack:FindFirstChild(Configs.SelectedItemForAutoFactory))
+                            end
+                        end
+                        task.wait(1)
+                        equipCooldown = true
+                    end
+                end
+
+                Velocity("Create")
+                repeat 
+                    rs.RenderStepped:Wait() 
+                   
+                    local NPCs = workspace.NPCs
+                    
+                    if NPCs:FindFirstChild( "Devil Fruit Scientist" ) or NPCs:FindFirstChild( "Scientist" ) and hum and hum.Health > 1  then
+                        local NPC = NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Scientist")
+                        local npcHRP = NPC:WaitForChild("HumanoidRootPart")
+                        
+                        NoClip(true)
+                        task.spawn(EquipTool)
+                        
+                        if GetDist(hrp, npcHRP, 10) then
+                            hrp.CFrame = npcHRP.CFrame*CFrame.new(0,-9,0)
+                            task.spawn(function()
+                                AutoAttack(npcHRP, "Melee")
+                            end)
+                        else
+                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,-9,0)})
+                            tween:Play()
+                            tween.Completed:Wait()
+                        end
+                    end
+                  
+                until not Configs.AutoFactory
+            end
+            
+            local FactoryPosition = Vector3.new(8809.859375, 65.7727279663086, 11527.3056640625)
+            local function GoToFactoryLocation()
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hrp = char:WaitForChild("HumanoidRootPart")
+                local hum = char:WaitForChild("Humanoid")
+
+                repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 50) or not Configs.AutoFactory
+                if not Configs.AutoFactory then return end
+                Velocity("Create")
+                Start()
+            end
+            
+            do -- Handle Dying so you respawn and keep autofarming
+                local con
+                con = player.CharacterAdded:Connect(function()
+                    if not Configs.AutoFactory then
+                        return con:Disconnect()
+                    end
+                    task.wait(2)
+                    GoToFactoryLocation()
+                end)
+            end
+         
+            if state then
+
+                if GetDist(hrp, FactoryPosition, 45) then
+                    -- fight factory people
+                    Start()
+                else
+                    -- go to factory 
+                    GoToFactoryLocation()
+                end
+            else
+                if currentTween then 
+                    currentTween:Cancel() 
+                end
+                Velocity("Remove")
+                NoClip(false)
+            end
+
+        end
+        local Pages = {
+            Main = UI:CreatePage({
+                Name = "Main"
+            })
+        }
+        
+        local Tabs = {
+            AutoFactory = Pages.Main:CreateLeftSection(
+                "Auto Factory"
+            ),
+            
+        }
+        
+        Tabs.AutoFactory:CreateToggle("AutoFactory", {
+            Name = "Auto Factory",
+            Default = false,
+            Callback = AutoFactory
+        })
+        local toolsDropdown = Tabs.AutoFactory:CreateDropdown("SelectedItemForAutoFactory",{
+            Name = "Selected Item",
+            ItemSelecting = true,
+            Values = GetPlayerItems(),
+            DefaultItemSelected = GetPlayerItems()[1],
+            SelectType = "Single"
+        })
+        Tabs.AutoFactory:CreateButton("Refresh", function()
+            toolsDropdown:Set(GetPlayerItems())
+        end)
+        Tabs.AutoFactory:CreateDivider()
+        Tabs.AutoFactory:CreateToggle("HitboxExtender",{
+            Name = "Hitbox Extender",
+            Default = false
+        })
+        Tabs.AutoFactory:CreateToggle("FastAttackAutoFactory",{
+            Name = "Fast Attack (Depends on ping)",
+            Default = false
+        })
+        Tabs.AutoFactory:CreateDivider()
+        Tabs.AutoFactory:CreateSlider("TweenSpeed", {
+            Name = "Tween Speed",
+            AllowOutOfRange = false,
+            Digits = 2,
+            Default = 50,
+            Max = 75,
+            Min = 10
         })
     end
 end)
