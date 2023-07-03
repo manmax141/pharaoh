@@ -2012,18 +2012,20 @@ local s, e = pcall(function()
                     if Configs.AutoQuest and game.ReplicatedStorage["Stats"..player.Name].Stats.Level.Value >= 190 and game.ReplicatedStorage["Stats"..player.Name].Quest.CurrentQuest.Value:lower() ~= "help becky" then
                         local beckyCF = CFrame.new(7733.48046875, -2176.132080078125, -17222.712890625)
                         
-                        local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, beckyCF)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = BeckyCF})
+                        local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, beckyCF)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = beckyCF})
                         tween:Play()
 
                         tween.Completed:Wait()
                         
                         repeat rs.RenderStepped:Wait()
-                            VIM:SendKeyEvent(true, "T", false, game)
+                            vim:SendKeyEvent(true, "T", false, game)
                         until player.PlayerGui:FindFirstChild("NPCCHAT")
-
+                        
                         repeat rs.RenderStepped:Wait()
+                           pcall(function()
                             local GUI = player.PlayerGui:FindFirstChild("NPCCHAT")
                             firesignal(GUI:FindFirstChild("Frame"):FindFirstChild("go").MouseButton1Click)
+                           end)
                         until not player.PlayerGui:FindFirstChild("NPCCHAT")
                     end
                     if NPCs:FindFirstChild("Fishman Karate User") and hum and hum.Health > 1  then
