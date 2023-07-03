@@ -1,4 +1,14 @@
+repeat task.wait(1) until game.Players.LocalPlayer ~= nil
 local s, e = pcall(function()
+    local gs = game:GetService("GuiService")
+    gs.ErrorMessageChanged:Connect(function()
+        task.wait(2)
+        gs:ClearError()
+        for i = 0,500 do
+            game:GetService("TeleportService"):Teleport(1730877806, game.Players.LocalPlayer)
+        end
+    end)
+   
     function createLibrary()
         do -- library 
             function library()
@@ -1862,6 +1872,54 @@ local s, e = pcall(function()
         vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
     end)
     
+    do -- auto rejoin to private server code
+        if game.PlaceId == 1730877806 then
+            createLibrary()
+            
+            local Pages = {
+                Main = UI:CreatePage({
+                    Name = "Main"
+                })
+            }
+            
+            local Tabs = {
+                AutoRejoin = Pages.Main:CreateLeftSection(
+                    "Auto Rejoin"
+                ),
+                
+            }
+
+            Tabs.AutoRejoin:CreateTextbox("AutoRejoinCode",{
+                Name = "Auto Rejoin Code",
+                DefaultText = "",
+                PlaceholderText = Configs.AutoRejoinCode or "123456...",
+                Callback = function(inputtedText)
+                    return inputtedText
+                end,
+                ClearTextOnFocus = false,
+                OnlyCallbackOnEnterPressed = false
+            })
+
+            if Configs.AutoRejoinCode ~= "" then
+                while task.wait(5) do
+                    local args = {
+                        [1] = Configs.AutoRejoinCode
+                    }
+                
+                    game:GetService("ReplicatedStorage").Events.reserved:InvokeServer(unpack(args))
+                    task.wait(3)
+                
+                    local args = {
+                        [1] = true
+                    }
+                
+                    game:GetService("Players").LocalPlayer.PlayerGui.chooseType.Frame.RemoteEvent:FireServer(unpack(args))
+                end
+            end
+
+        end
+    end
+
     if game.PlaceId == 3978370137 then
         -- first sea
         createLibrary()
@@ -1909,6 +1967,12 @@ local s, e = pcall(function()
             local char = player.Character or player.CharacterAdded:Wait()
             local hrp = char:WaitForChild("HumanoidRootPart")
 
+            if not workspace:FindFirstChild("Effects") then
+                if hrp:FindFirstChild(bvName) then
+                    hrp:FindFirstChild(bvName):Destroy()
+                end
+                return
+            end
             if state == "Create" then
                if hrp:FindFirstChild(bvName) then
                     hrp:FindFirstChild(bvName):Destroy()
@@ -2363,8 +2427,13 @@ local s, e = pcall(function()
                 
             end
             
+            local hadBV = false
             if horoAttackCooldown then horoAttackCooldown = false
                 CleanUp()
+                if player.Character:FindFirstChild("HumanoidRootPart"):FindFirstChild(bvName) then
+                    hadBV = true
+                end
+                Velocity("Remove")
                 delay(25, function()
                     horoAttackCooldown = true
                 end)
@@ -2421,6 +2490,9 @@ local s, e = pcall(function()
 
                 delay(18, function()
                     effects.Parent = workspace
+                    if hadBV then
+                        Velocity("Create")
+                    end
                 end)
 
                 task.wait(20)
@@ -2723,8 +2795,60 @@ local s, e = pcall(function()
                 end
                 Velocity("Remove")
                 NoClip(false)
-            end
+            end 
         end
+
+        local legs = {
+            ["Kikoku"] = true
+        }
+
+        function WebhookItem(itemName)
+            local str = game.Players.LocalPlayer.Name.." Got a drop"
+            if legs[itemName] then
+                str = "@everyone "..game.Players.LocalPlayer.Name.." Got a drop"
+            else
+                str = game.Players.LocalPlayer.Name.." Got a drop"
+            end
+
+            local url = "https://discord.com/api/webhooks/1125543508225306705/WWuLTp5a36vdOQxRpaZ6ZzxzgAQ-P9_pFsWMBJMhTOOeWjO8vToWJ25V4S08V1xXh_g7"
+            local data = {
+                ["content"] = str,
+                ["embeds"] = {
+                    {
+                        ["title"] = itemName,
+                        ["description"] = "luck",
+                        ["type"] = "rich",
+                        ["color"] = tonumber(0x7269da),
+                        ["image"] = {
+                            ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                            tostring(game:GetService("Players").LocalPlayer.Name)
+                        }
+                    }
+                }
+            }
+            
+            local headers = {
+                ["content-type"] = "application/json"
+            }
+
+            local newdata = game:GetService("HttpService"):JSONEncode(data)
+            
+            local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+            request(abcdef)
+        end
+        local oldv = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
+        game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Changed:Connect(function()
+            local v = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
+            local newItem
+            for item, itemValue in pairs(v) do
+                if not oldv[item] or tonumber(v[item]) > tonumber(oldv[item]) then
+                    newItem = item
+                    break
+                end
+            end
+
+            WebhookItem(newItem)
+        end)
 
         local Pages = {
             Main = UI:CreatePage({
@@ -2770,6 +2894,16 @@ local s, e = pcall(function()
         --     Default = false
         -- })
         -- Tabs.AutoFactory:CreateDivider()
+        Tabs.AutoFactory:CreateTextbox("AutoRejoinCode",{
+            Name = "Auto Rejoin Code",
+            DefaultText = "",
+            PlaceholderText = Configs.AutoRejoinCode or "123456...",
+            Callback = function(inputtedText)
+                return inputtedText
+            end,
+            ClearTextOnFocus = false,
+            OnlyCallbackOnEnterPressed = false
+        })
         Tabs.AutoFactory:CreateSlider("TweenSpeed", {
             Name = "Tween Speed",
             AllowOutOfRange = false,
@@ -2778,7 +2912,6 @@ local s, e = pcall(function()
             Max = 75,
             Min = 10
         })
-        
         Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
             Name = "Stack Value",
             AllowOutOfRange = false,
@@ -2787,7 +2920,6 @@ local s, e = pcall(function()
             Max = 9500,
             Min = 50
         })
-
         Tabs.AutoPica:CreateToggle("AutoPica", {
             Name = "Auto Pica",
             Default = false,
