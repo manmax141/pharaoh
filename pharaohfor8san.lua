@@ -2664,7 +2664,7 @@ local s, e = pcall(function()
                 if not Configs.AutoFactory then return end
                 task.spawn(function()
                     repeat rs.RenderStepped:Wait()
-                        NoClip(true)
+                        task.spawn(NoClip, true)
                         task.spawn(AutoJump)
                     until not Configs.AutoFactory
                 end)
