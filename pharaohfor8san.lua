@@ -2351,6 +2351,7 @@ local s, e = pcall(function()
                 task.wait(8)
                 if not Configs.AutoFactory then
                     currentTween:Cancel()
+                    currentTween = nil
                 else
                     currentTween:Play()
                 end
