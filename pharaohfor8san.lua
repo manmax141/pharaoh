@@ -2621,13 +2621,13 @@ local s, e = pcall(function()
                                 local NPC = NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law")
                             
                                 if NPC then
-                                            
                                     local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, factoryEndPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(factoryEndPosition)})
                                     tween:Play()
                                     tween.Completed:Wait()
                                     
                                     task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 150)
                                 end
+                                
                             end
                         end
                     end)
