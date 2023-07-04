@@ -1,4 +1,4 @@
-repeat task.wait(1) until game.Players.LocalPlayer ~= nil and game.Players.LocalPlayer.Character ~= nil
+repeat task.wait(3) until game.Players.LocalPlayer ~= nil and game.Players.LocalPlayer.Character ~= nil
 local s, e = pcall(function()
     local gs = game:GetService("GuiService")
     gs.ErrorMessageChanged:Connect(function()
@@ -2474,7 +2474,7 @@ local s, e = pcall(function()
                 game:GetService("ReplicatedStorage").Events.Skill:InvokeServer(unpack(args))
                 
                 task.wait(.5)
-
+                
                 local args = {
                     [1] = {
                         ["Target"] = hrp,
