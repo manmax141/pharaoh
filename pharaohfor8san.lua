@@ -2414,9 +2414,9 @@ local s, e = pcall(function()
         function AutoJump()
             if jumpCooldown then 
                 jumpCooldown = false
-                local char = player.Character or player.CharacterAdded:Wait()
-                local hrp = char:WaitForChild("HumanoidRootPart")
-                local hum = char:WaitForChild("Humanoid")
+                -- local char = player.Character or player.CharacterAdded:Wait()
+                -- local hrp = char:WaitForChild("HumanoidRootPart")
+                -- local hum = char:WaitForChild("Humanoid")
 
                 vim:SendKeyEvent(true, "Space", false, game)
                 vim:SendKeyEvent(true, "Space", false, game)
@@ -2605,6 +2605,7 @@ local s, e = pcall(function()
                     rs.RenderStepped:Wait() 
                     pcall(function()
                         task.spawn(NoClip, true)
+                        task.spawn(AutoJump)
                         -- task.spawn(EquipTool)
                         
                         local NPCs = workspace.NPCs
@@ -2665,8 +2666,8 @@ local s, e = pcall(function()
                 if not Configs.AutoFactory then return end
                 task.spawn(function()
                     repeat rs.RenderStepped:Wait()
-                        task.spawn(NoClip, true)
                         task.spawn(AutoJump)
+                        task.spawn(NoClip, true)
                     until not Configs.AutoFactory
                 end)
                 repeat rs.RenderStepped:Wait() 
