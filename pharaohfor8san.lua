@@ -2427,7 +2427,7 @@ local s, e = pcall(function()
                 else
                     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Sky Walk2",{["char"] = char,["cf"] = hrp.CFrame})
                 end
-                task.wait(1.35)
+                task.wait(1)
                 jumpCooldown = true
             end
         end
