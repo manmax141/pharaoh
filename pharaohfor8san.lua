@@ -2418,14 +2418,15 @@ local s, e = pcall(function()
         function AutoJump()
             if jumpCooldown then 
                 jumpCooldown = false
-                -- local char = player.Character or player.CharacterAdded:Wait()
-                -- local hrp = char:WaitForChild("HumanoidRootPart")
-                -- local hum = char:WaitForChild("Humanoid")
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hrp = char:WaitForChild("HumanoidRootPart")
+                local hum = char:WaitForChild("Humanoid")
 
-                vim:SendKeyEvent(true, "Space", false, game)
-                vim:SendKeyEvent(true, "Space", false, game)
-                vim:SendKeyEvent(false, "Space", false, game)
-
+                if player.Backpack:FindFirstChild("Rokushiki") or player.Character:FindFirstChild("Rokushiki") then
+                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Geppo",{["char"] = char,["cf"] = hrp.CFrame})
+                else
+                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Sky Walk2",{["char"] = char,["cf"] = hrp.CFrame})
+                end
                 task.wait(1.35)
                 jumpCooldown = true
             end
@@ -2494,10 +2495,10 @@ local s, e = pcall(function()
 
                 local h = workspace.Effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
-                -- local effects = workspace.Effects
-            --    delay(3, function()
-                -- effects.Parent = game.ReplicatedStorage
-            --    end)
+                local effects = workspace.Effects
+               delay(3, function()
+                effects.Parent = game.ReplicatedStorage
+               end)
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
@@ -2516,10 +2517,10 @@ local s, e = pcall(function()
                 end
 
                 delay(18, function()
-                    -- effects.Parent = workspace
-                    -- if hadBV then
-                    --     -- Velocity("Create")
-                    -- end
+                    effects.Parent = workspace
+                    if hadBV then
+                        -- Velocity("Create")
+                    end
                 end)
 
                 task.wait(20)
