@@ -2490,10 +2490,10 @@ local s, e = pcall(function()
 
                 local h = workspace.Effects.MiniHollow.Hitbox
 
-                local effects = workspace.Effects
-               delay(3, function()
-                effects.Parent = game.ReplicatedStorage
-               end)
+                -- local effects = workspace.Effects
+            --    delay(3, function()
+                -- effects.Parent = game.ReplicatedStorage
+            --    end)
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
@@ -2512,7 +2512,7 @@ local s, e = pcall(function()
                 end
 
                 delay(18, function()
-                    effects.Parent = workspace
+                    -- effects.Parent = workspace
                     -- if hadBV then
                     --     -- Velocity("Create")
                     -- end
