@@ -2414,7 +2414,7 @@ local s, e = pcall(function()
 
                 game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Geppo",{["char"] = char,["cf"] = hrp.CFrame})
 
-                task.wait(1)
+                task.wait(.65)
                 jumpCooldown = true
             end
         end
