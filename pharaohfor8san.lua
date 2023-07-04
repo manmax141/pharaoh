@@ -2344,13 +2344,19 @@ local s, e = pcall(function()
         end
 
         -- tp back fix
-        function cancelTween()
-            if currentTween then 
-                currentTween:Cancel()
-                currentTween = nil
-                tweenDB = false
-                task.wait(8)
-                tweenDB = true
+        function cancelTween(c)
+            for _,v in pairs(c:GetDescendants()) do
+                if v:IsA("TextLabel") and (v.Text:find(player.Name) or v.TextColor3 == Color3.fromRGB(255, 102, 102)) then
+                    
+                    if currentTween then 
+                        currentTween:Cancel()
+                        currentTween = nil
+                        tweenDB = false
+                        task.wait(8)
+                        tweenDB = true
+                    end
+
+                end
             end
         end
         player.PlayerGui.Notifications.DescendantAdded:Connect(cancelTween)
@@ -2662,23 +2668,21 @@ local s, e = pcall(function()
 
                 repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 2500) or not Configs.AutoFactory
                 if not Configs.AutoFactory then return end
-                task.spawn(function()
-                    repeat rs.RenderStepped:Wait() 
-                        AutoJump()
-                    until not Configs.AutoFactory
-                end)
+                repeat rs.RenderStepped:Wait() 
+                    task.spawn(AutoJump)
+                    if GetDist(hrp, FactoryPosition, 45) then
+                        Velocity("Create")
+                        Start()
+                    else
+                        Velocity("Create")
+                        local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, FactoryPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(FactoryPosition)})
+                        tween:Play()
+                        
+                        tween.Completed:Wait()
+                        Start()
+                    end
+                until not Configs.AutoFactory
                 
-                if GetDist(hrp, FactoryPosition, 45) then
-                    Velocity("Create")
-                    Start()
-                else
-                    Velocity("Create")
-                    local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, FactoryPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(FactoryPosition)})
-                    tween:Play()
-                    
-                    tween.Completed:Wait()
-                    Start()
-                end
             end
             
             do -- Handle Dying so you respawn and keep autofarming
