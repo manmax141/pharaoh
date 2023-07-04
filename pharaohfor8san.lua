@@ -2426,7 +2426,7 @@ local s, e = pcall(function()
                 vim:SendKeyEvent(true, "Space", false, game)
                 vim:SendKeyEvent(false, "Space", false, game)
 
-                task.wait(2)
+                task.wait(1.35)
                 jumpCooldown = true
             end
         end
