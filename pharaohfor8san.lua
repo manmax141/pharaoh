@@ -2473,7 +2473,7 @@ local s, e = pcall(function()
                                          
                 game:GetService("ReplicatedStorage").Events.Skill:InvokeServer(unpack(args))
                 
-                -- task.wait()
+                task.wait(.5)
 
                 local args = {
                     [1] = {
@@ -2494,7 +2494,6 @@ local s, e = pcall(function()
                 local effects = workspace.Effects
                 local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
-                effects.Parent = game.ReplicatedStorage
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
@@ -2507,6 +2506,9 @@ local s, e = pcall(function()
                         FireAll(args)
                     end)
                 end
+
+                effects.Parent = game.ReplicatedStorage
+                
 
                 delay(18, function()
                     effects.Parent = workspace
