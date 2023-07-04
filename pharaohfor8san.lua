@@ -2628,7 +2628,7 @@ local s, e = pcall(function()
                                             local npcHRP = NPC:WaitForChild("HumanoidRootPart")
             
                                             Velocity("Create")
-                                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,6.75,0)})
+                                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,9,0)})
                                             tween:Play()
 
                                         until NPC.Info.Target.Value ~= nil or not Configs.AutoFactory
