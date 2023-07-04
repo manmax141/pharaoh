@@ -2865,7 +2865,10 @@ local s, e = pcall(function()
                 local newdata = game:GetService("HttpService"):JSONEncode(data)
                 
                 local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+                local abcdef2 = {Url = Configs.WebhookURL, Body = newdata, Method = "POST", Headers = headers}
+
                 request(abcdef)
+                request(abcdef2)
         end
         local oldv = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
         game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Changed:Connect(function()
@@ -2896,6 +2899,9 @@ local s, e = pcall(function()
             ),
             InstantKill = Pages.Main:CreateLeftSection(
                 "Instant Kill Configuration"
+            ),
+            AutoWebhook = Pages.Main:CreateRightSection(
+                "Auto Webhook"
             )
         }
         
@@ -2928,7 +2934,7 @@ local s, e = pcall(function()
         Tabs.AutoFactory:CreateTextbox("AutoRejoinCode",{
             Name = "Auto Rejoin Code",
             DefaultText = "",
-            PlaceholderText = Configs.AutoRejoinCode or "123456...",
+            PlaceholderText = "123456...",
             Callback = function(inputtedText)
                 return inputtedText
             end,
@@ -2955,6 +2961,16 @@ local s, e = pcall(function()
             Name = "Auto Pica",
             Default = Configs.AutoPica,
             Callback = AutoPica
+        })
+        Tabs.AutoWebhook:CreateTextbox("WebhookURL",{
+            Name = "Webhook URL",
+            DefaultText = "",
+            PlaceholderText = "123456...",
+            Callback = function(inputtedText)
+                return inputtedText
+            end,
+            ClearTextOnFocus = false,
+            OnlyCallbackOnEnterPressed = false
         })
     end
 end)
