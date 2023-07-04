@@ -2422,7 +2422,7 @@ local s, e = pcall(function()
                 vim:SendKeyEvent(true, "Space", false, game)
                 vim:SendKeyEvent(false, "Space", false, game)
 
-                task.wait(1)
+                task.wait(2)
                 jumpCooldown = true
             end
         end
@@ -2615,7 +2615,7 @@ local s, e = pcall(function()
                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
                             tween:Play()
                             tween.Completed:Wait()
-                            AutoHoroAttack(hrp)
+                            task.spawn(AutoHoroAttack, hrp)
                         else
                             if NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law") then
                                 for _, NPC in pairs(NPCs:GetChildren()) do
