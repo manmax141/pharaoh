@@ -2384,13 +2384,16 @@ local s, e = pcall(function()
         end
 
         function NoClip(state)
-            local char = player.Character or player.CharacterAdded:Wait()
-            
-            for _,v in pairs(char:GetChildren()) do
-                if v:IsA("BasePart") then
-                    v.CanCollide = not state
+            pcall(function()
+
+                local char = player.Character
+                
+                for _,v in pairs(char:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = not state
+                    end
                 end
-            end
+            end)
         end
         
         function GetPlayerItems()
