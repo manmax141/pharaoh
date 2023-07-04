@@ -2599,13 +2599,7 @@ local s, e = pcall(function()
                     end
                 end
 
-                Velocity("Create")
-                task.spawn(function()
-                    repeat rs.RenderStepped:Wait()
-                        NoClip(true)
-                        task.spawn(AutoJump)
-                    until not Configs.AutoFactory
-                end)
+                Velocity("Create")    
                 
                 repeat
                     rs.RenderStepped:Wait() 
@@ -2668,6 +2662,12 @@ local s, e = pcall(function()
 
                 repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 2500) or not Configs.AutoFactory
                 if not Configs.AutoFactory then return end
+                task.spawn(function()
+                    repeat rs.RenderStepped:Wait()
+                        NoClip(true)
+                        task.spawn(AutoJump)
+                    until not Configs.AutoFactory
+                end)
                 repeat rs.RenderStepped:Wait() 
                     if GetDist(hrp, FactoryPosition, 45) then
                         Velocity("Create")
