@@ -2332,14 +2332,29 @@ local s, e = pcall(function()
         end
     
         local currentTween
+        local tweenDB = true
         function Tween(...)
-            if currentTween then
-                currentTween:Cancel()
+            if tweenDB then
+                if currentTween then
+                    currentTween:Cancel()
+                end
+                currentTween = ts:Create(...)
+                return currentTween
             end
-            currentTween = ts:Create(...)
-            return currentTween
         end
-        
+
+        -- tp back fix
+        function cancelTween()
+            if currentTween then 
+                currentTween:Pause() 
+                tweenDB = false
+                task.wait(3)
+                currentTween:Play() 
+                tweenDB = true
+            end
+        end
+        player.PlayerGui.Notifications.DescendantAdded:Connect(cancelTween)
+
         local bvName = tostring(math.random(1,135135135))
         function Velocity(state)
             local char = player.Character or player.CharacterAdded:Wait()
