@@ -2802,40 +2802,46 @@ local s, e = pcall(function()
             ["Kikoku"] = true
         }
 
+        local dbs = {}
         function WebhookItem(itemName)
             if itemName:find("Cyborg") then return end
-            local str = game.Players.LocalPlayer.Name.." Got a drop"
-            if legs[itemName] then
-                str = "@everyone "..game.Players.LocalPlayer.Name.." Got a drop"
-            else
-                str = game.Players.LocalPlayer.Name.." Got a drop"
-            end
-
-            local url = "https://discord.com/api/webhooks/1125543508225306705/WWuLTp5a36vdOQxRpaZ6ZzxzgAQ-P9_pFsWMBJMhTOOeWjO8vToWJ25V4S08V1xXh_g7"
-            local data = {
-                ["content"] = str,
-                ["embeds"] = {
-                    {
-                        ["title"] = itemName,
-                        ["description"] = "luck",
-                        ["type"] = "rich",
-                        ["color"] = tonumber(0x7269da),
-                        ["image"] = {
-                            ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
-                            tostring(game:GetService("Players").LocalPlayer.Name)
+            if dbs[itemName] then return end
+                dbs[itemName] = true
+                delay(3, function()
+                    dbs[itemName] = nil
+                end)
+                local str = game.Players.LocalPlayer.Name.." Got a drop"
+                if legs[itemName] then
+                    str = "@everyone "..game.Players.LocalPlayer.Name.." Got a drop"
+                else
+                    str = game.Players.LocalPlayer.Name.." Got a drop"
+                end
+    
+                local url = "https://discord.com/api/webhooks/1125543508225306705/WWuLTp5a36vdOQxRpaZ6ZzxzgAQ-P9_pFsWMBJMhTOOeWjO8vToWJ25V4S08V1xXh_g7"
+                local data = {
+                    ["content"] = str,
+                    ["embeds"] = {
+                        {
+                            ["title"] = itemName,
+                            ["description"] = "luck",
+                            ["type"] = "rich",
+                            ["color"] = tonumber(0x7269da),
+                            ["image"] = {
+                                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                                tostring(game:GetService("Players").LocalPlayer.Name)
+                            }
                         }
                     }
                 }
-            }
-            
-            local headers = {
-                ["content-type"] = "application/json"
-            }
-
-            local newdata = game:GetService("HttpService"):JSONEncode(data)
-            
-            local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
-            request(abcdef)
+                
+                local headers = {
+                    ["content-type"] = "application/json"
+                }
+    
+                local newdata = game:GetService("HttpService"):JSONEncode(data)
+                
+                local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+                request(abcdef)
         end
         local oldv = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
         game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Changed:Connect(function()
@@ -2847,7 +2853,7 @@ local s, e = pcall(function()
                     break
                 end
             end
-
+            oldv = v
             WebhookItem(newItem)
         end)
 
