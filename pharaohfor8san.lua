@@ -2582,13 +2582,17 @@ local s, e = pcall(function()
                         NoClip(true)
                     until not Configs.AutoFactory
                 end)
+                task.spawn(function()
+                    repeat task.wait(1)
+                        task.spawn(Velocity, "Create")
+                    until not Configs.AutoFactory
+                end)
                 repeat 
                     rs.RenderStepped:Wait() 
                     pcall(function()
-                        task.spawn(Velocity, "Create")
                         -- task.spawn(EquipTool)
                         task.spawn(AutoJump)
-
+                        
                         local NPCs = workspace.NPCs
                         local factoryEndPosition = Vector3.new(8812.583984375, 467.5847473144531, 11559.916015625)
                         
