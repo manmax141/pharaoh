@@ -1990,13 +1990,14 @@ local s, e = pcall(function()
         end
 
         function NoClip(state)
-            local char = player.Character or player.CharacterAdded:Wait()
-            
+           pcall(function()
+            local char = player.Character
             for _,v in pairs(char:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.CanCollide = not state
                 end
             end
+           end)
         end
         
         function AutoFarm(state)
@@ -2603,9 +2604,10 @@ local s, e = pcall(function()
                 
                 repeat
                     rs.RenderStepped:Wait() 
+                    task.spawn(AutoJump)
+                    task.spawn(NoClip, true)
                     pcall(function()
-                        task.spawn(NoClip, true)
-                        task.spawn(AutoJump)
+                       
                         -- task.spawn(EquipTool)
                         
                         local NPCs = workspace.NPCs
