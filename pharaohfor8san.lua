@@ -2584,6 +2584,7 @@ local s, e = pcall(function()
                 end)
                 task.spawn(function()
                     repeat task.wait(1)
+                        if not Configs.AutoFactory then break end
                         task.spawn(Velocity, "Create")
                     until not Configs.AutoFactory
                 end)
