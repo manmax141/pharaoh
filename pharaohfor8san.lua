@@ -2603,6 +2603,7 @@ local s, e = pcall(function()
                 task.spawn(function()
                     repeat rs.RenderStepped:Wait()
                         NoClip(true)
+                        task.spawn(AutoJump)
                     until not Configs.AutoFactory
                 end)
                 
@@ -2610,7 +2611,6 @@ local s, e = pcall(function()
                     rs.RenderStepped:Wait() 
                     pcall(function()
                         -- task.spawn(EquipTool)
-                        task.spawn(AutoJump)
                         
                         local NPCs = workspace.NPCs
                         local factoryEndPosition = Vector3.new(8812.583984375, 467.5847473144531, 11559.916015625)
@@ -2669,7 +2669,6 @@ local s, e = pcall(function()
                 repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 2500) or not Configs.AutoFactory
                 if not Configs.AutoFactory then return end
                 repeat rs.RenderStepped:Wait() 
-                    task.spawn(AutoJump)
                     if GetDist(hrp, FactoryPosition, 45) then
                         Velocity("Create")
                         Start()
