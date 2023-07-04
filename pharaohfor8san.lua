@@ -2440,7 +2440,6 @@ local s, e = pcall(function()
                 for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name) then
                         pcall(function()
-                            v:FireServer(unpack(args))
                             v:Destroy()
                         end)
                     end
