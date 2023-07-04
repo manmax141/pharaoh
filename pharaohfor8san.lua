@@ -2585,7 +2585,7 @@ local s, e = pcall(function()
                 repeat 
                     rs.RenderStepped:Wait() 
                     pcall(function()
-                        
+                        task.spawn(Velocity, "Create")
                         -- task.spawn(EquipTool)
                         task.spawn(AutoJump)
 
