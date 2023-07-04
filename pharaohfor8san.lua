@@ -2608,7 +2608,7 @@ local s, e = pcall(function()
                         local factoryEndPosition = Vector3.new(8812.583984375, 467.5847473144531, 11559.916015625)
                         
                         if workspace.Env.FactoryPool.hitbox:FindFirstChild("health") and workspace.Env.FactoryPool.hitbox:FindFirstChild("health").Enabled == true then
-                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame})
+                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
                             tween:Play()
                             tween.Completed:Wait()
                             AutoHoroAttack(hrp)
