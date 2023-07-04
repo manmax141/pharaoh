@@ -1967,12 +1967,12 @@ local s, e = pcall(function()
             local char = player.Character or player.CharacterAdded:Wait()
             local hrp = char:WaitForChild("HumanoidRootPart")
 
-            if not workspace:FindFirstChild("Effects") then
-                if hrp:FindFirstChild(bvName) then
-                    hrp:FindFirstChild(bvName):Destroy()
-                end
-                return
-            end
+            -- if not workspace:FindFirstChild("Effects") then
+            --     if hrp:FindFirstChild(bvName) then
+            --         hrp:FindFirstChild(bvName):Destroy()
+            --     end
+            --     return
+            -- end
             if state == "Create" then
                if hrp:FindFirstChild(bvName) then
                     hrp:FindFirstChild(bvName):Destroy()
@@ -2453,10 +2453,10 @@ local s, e = pcall(function()
             local hadBV = false
             if horoAttackCooldown then horoAttackCooldown = false
                 CleanUp()
-                if player.Character:FindFirstChild("HumanoidRootPart"):FindFirstChild(bvName) then
-                    hadBV = true
-                end
-                Velocity("Remove")
+                -- if playesr.Character:FindFirstChild("HumanoidRootPart"):FindFirstChild(bvName) then
+                    -- hadBV = true
+                -- end
+                -- Velocity("Remove")
                 delay(25, function()
                     horoAttackCooldown = true
                 end)
@@ -2513,9 +2513,9 @@ local s, e = pcall(function()
 
                 delay(18, function()
                     effects.Parent = workspace
-                    if hadBV then
-                        -- Velocity("Create")
-                    end
+                    -- if hadBV then
+                    --     -- Velocity("Create")
+                    -- end
                 end)
 
                 task.wait(20)
