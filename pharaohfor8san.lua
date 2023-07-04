@@ -1976,7 +1976,7 @@ local s, e = pcall(function()
             if state == "Create" then
                if hrp:FindFirstChild(bvName) then
                     hrp:FindFirstChild(bvName):Destroy()
-               end
+               end  
                local bv = Instance.new("BodyVelocity")
                bv.Name = bvName
                bv.Parent = hrp
@@ -2491,7 +2491,7 @@ local s, e = pcall(function()
                 delay(18, function()
                     effects.Parent = workspace
                     if hadBV then
-                        Velocity("Create")
+                        -- Velocity("Create")
                     end
                 end)
 
