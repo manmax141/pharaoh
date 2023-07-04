@@ -2346,15 +2346,10 @@ local s, e = pcall(function()
         -- tp back fix
         function cancelTween()
             if currentTween then 
-                currentTween:Pause() 
+                currentTween:Cancel()
+                currentTween = nil
                 tweenDB = false
                 task.wait(8)
-                if not Configs.AutoFactory then
-                    currentTween:Cancel()
-                    currentTween = nil
-                else
-                    currentTween:Play()
-                end
                 tweenDB = true
             end
         end
