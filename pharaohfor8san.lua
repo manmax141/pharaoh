@@ -2604,6 +2604,7 @@ local s, e = pcall(function()
                 repeat
                     rs.RenderStepped:Wait() 
                     pcall(function()
+                        task.spawn(NoClip, true)
                         -- task.spawn(EquipTool)
                         
                         local NPCs = workspace.NPCs
