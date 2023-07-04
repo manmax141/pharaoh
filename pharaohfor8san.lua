@@ -2421,7 +2421,7 @@ local s, e = pcall(function()
                 local char = player.Character or player.CharacterAdded:Wait()
                 local hrp = char:WaitForChild("HumanoidRootPart")
                 local hum = char:WaitForChild("Humanoid")
-
+                
                 if player.Backpack:FindFirstChild("Rokushiki") or player.Character:FindFirstChild("Rokushiki") then
                     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Geppo",{["char"] = char,["cf"] = hrp.CFrame})
                 else
@@ -2493,9 +2493,10 @@ local s, e = pcall(function()
                 --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
                 -- end)
 
-                local h = workspace.Effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
                 local effects = workspace.Effects
+                local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
+
                delay(3, function()
                 effects.Parent = game.ReplicatedStorage
                end)
