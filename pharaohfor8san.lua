@@ -2348,7 +2348,7 @@ local s, e = pcall(function()
             if currentTween then 
                 currentTween:Pause() 
                 tweenDB = false
-                task.wait(3)
+                task.wait(8)
                 currentTween:Play() 
                 tweenDB = true
             end
