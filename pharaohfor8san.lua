@@ -2345,9 +2345,9 @@ local s, e = pcall(function()
         end
 
         -- tp back fix
-        function cancelTween(c)
-            for _,v in pairs(c:GetDescendants()) do
-                if v:IsA("TextLabel") and v.Text:find("Distance") then
+        function cancelTween()
+            for _,v in pairs(player.PlayerGui.Notifications:GetDescendants()) do
+                if v:IsA("TextLabel") and v.Text:find(player.Name) then
                     
                     if currentTween then 
                         currentTween:Cancel()
