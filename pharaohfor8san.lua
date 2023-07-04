@@ -2349,7 +2349,11 @@ local s, e = pcall(function()
                 currentTween:Pause() 
                 tweenDB = false
                 task.wait(8)
-                currentTween:Play() 
+                if not Configs.AutoFactory then
+                    currentTween:Cancel()
+                else
+                    currentTween:Play()
+                end
                 tweenDB = true
             end
         end
@@ -2412,9 +2416,11 @@ local s, e = pcall(function()
                 local hrp = char:WaitForChild("HumanoidRootPart")
                 local hum = char:WaitForChild("Humanoid")
 
-                game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Geppo",{["char"] = char,["cf"] = hrp.CFrame})
+                vim:SendKeyEvent(true, "Space", false, game)
+                vim:SendKeyEvent(true, "Space", false, game)
+                vim:SendKeyEvent(false, "Space", false, game)
 
-                task.wait(.5)
+                task.wait(1)
                 jumpCooldown = true
             end
         end
@@ -2597,8 +2603,8 @@ local s, e = pcall(function()
                         NoClip(true)
                     until not Configs.AutoFactory
                 end)
-           
-                repeat 
+                
+                repeat
                     rs.RenderStepped:Wait() 
                     pcall(function()
                         -- task.spawn(EquipTool)
@@ -2700,6 +2706,7 @@ local s, e = pcall(function()
                     GoToFactoryLocation()
                 end
             else
+                task.wait(.35)
                 if currentTween then 
                     currentTween:Cancel() 
                 end
