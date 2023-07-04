@@ -2488,7 +2488,7 @@ local s, e = pcall(function()
                 --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
                 -- end)
 
-                local h = workspace.Effects.MiniHollow.Hitbox
+                local h = workspace.Effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
                 -- local effects = workspace.Effects
             --    delay(3, function()
