@@ -2605,6 +2605,7 @@ local s, e = pcall(function()
                                         repeat rs.RenderStepped:Wait()
                                             local npcHRP = NPC:WaitForChild("HumanoidRootPart")
             
+                                            Velocity("Create")
                                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,6.75,0)})
                                             tween:Play()
 
@@ -2621,6 +2622,7 @@ local s, e = pcall(function()
                                 local NPC = NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law")
                             
                                 if NPC then
+                                    Velocity("Create")
                                     local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, factoryEndPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(factoryEndPosition)})
                                     tween:Play()
                                     tween.Completed:Wait()
