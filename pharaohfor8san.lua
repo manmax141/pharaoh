@@ -2434,14 +2434,13 @@ local s, e = pcall(function()
 
         local horoAttackCooldown = true
         local fireServer = Instance.new("RemoteEvent").FireServer
+        
         function AutoHoroAttack(hrp, seg)
             local function CleanUp()
 
                 for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name) then
-                        pcall(function()
-                            v:Destroy()
-                        end)
+                        v:Destroy()
                     end
                 end 
                 
@@ -2451,7 +2450,7 @@ local s, e = pcall(function()
 
                 for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
-                        v:FireServer(unpack(args))
+                        fireServer(v, unpack(args))
                     end
                 end 
                 
@@ -2474,7 +2473,7 @@ local s, e = pcall(function()
                                          
                 game:GetService("ReplicatedStorage").Events.Skill:InvokeServer(unpack(args))
                 
-                task.wait(.45)
+                -- task.wait()
 
                 local args = {
                     [1] = {
@@ -2483,13 +2482,9 @@ local s, e = pcall(function()
                     }
                 }
 
-                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
-                    if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
-                        v:FireServer(unpack(args))
-                    end
-                end 
+                FireAll(args)
                 
-                task.wait(.65)
+                task.wait(.5)
 
                 -- delay(1, function()
                 --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
@@ -2499,9 +2494,7 @@ local s, e = pcall(function()
                 local effects = workspace.Effects
                 local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
-               delay(3, function()
                 effects.Parent = game.ReplicatedStorage
-               end)
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
@@ -2511,11 +2504,7 @@ local s, e = pcall(function()
                             [3] = hrp
                         }
                         
-                        for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
-                            if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
-                                v:FireServer(unpack(args))
-                            end
-                        end 
+                        FireAll(args)
                     end)
                 end
 
@@ -2592,7 +2581,7 @@ local s, e = pcall(function()
                 local equipCooldown = true
                 local function EquipTool()
                     if equipCooldown then
-                        equipCooldown = false
+                        equipCooldown= false
                         local char = player.Character or player.CharacterAdded:Wait()
                         local hrp = char:WaitForChild("HumanoidRootPart")
                         local hum = char:WaitForChild("Humanoid")
@@ -2609,10 +2598,17 @@ local s, e = pcall(function()
 
                 Velocity("Create")    
                 
+                task.spawn(function()
+                    repeat
+                        rs.RenderStepped:Wait()
+                        task.spawn(AutoJump)
+                        task.spawn(NoClip, true)
+                    until not Configs.AutoFactory
+                end)
+
                 repeat
                     rs.RenderStepped:Wait() 
-                    task.spawn(AutoJump)
-                    task.spawn(NoClip, true)
+                  
                     pcall(function()
                        
                         -- task.spawn(EquipTool)
@@ -2891,6 +2887,12 @@ local s, e = pcall(function()
             end
             oldv = v
             WebhookItem(newItem)
+        end)
+
+        rs.RenderStepped:Connect(function()
+            if currentTween or hrp:FindFirstChild(bvName) then
+                AutoJump()
+            end
         end)
 
         local Pages = {
