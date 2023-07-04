@@ -2627,7 +2627,6 @@ local s, e = pcall(function()
                                     
                                     task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 150)
                                 end
-                                
                             end
                         end
                     end)
@@ -2823,7 +2822,7 @@ local s, e = pcall(function()
                     ["embeds"] = {
                         {
                             ["title"] = itemName,
-                            ["description"] = "luck",
+                            ["description"] = "luck v2",
                             ["type"] = "rich",
                             ["color"] = tonumber(0x7269da),
                             ["image"] = {
