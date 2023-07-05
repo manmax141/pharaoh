@@ -2854,7 +2854,7 @@ local s, e = pcall(function()
                     ["embeds"] = {
                         {
                             ["title"] = itemName,
-                            ["description"] = "luck v2",
+                            ["description"] = "",
                             ["type"] = "rich",
                             ["color"] = tonumber(0x7269da),
                             ["image"] = {
