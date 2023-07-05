@@ -2317,7 +2317,7 @@ local s, e = pcall(function()
         function GetDist(p1, p2, range)
             p1 = typeof(p1) == "Vector3" and p1 or p1.Position
             p2 = typeof(p2) == "Vector3" and p2 or p2.Position
-                                        
+            
            if range then
             return (p1-p2).magnitude <= range
            else
@@ -2959,7 +2959,7 @@ local s, e = pcall(function()
             AllowOutOfRange = false,
             Digits = 2,
             Default = 50,
-            Max = 75,
+            Max = 150,
             Min = 10
         })
         Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
