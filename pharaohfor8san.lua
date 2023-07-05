@@ -2959,7 +2959,7 @@ local s, e = pcall(function()
             AllowOutOfRange = false,
             Digits = 2,
             Default = 50,
-            Max = 150,
+            Max = 115,
             Min = 10
         })
         Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
