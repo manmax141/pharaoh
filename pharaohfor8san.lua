@@ -2616,7 +2616,7 @@ local s, e = pcall(function()
                         -- task.spawn(EquipTool)
                         
                         local NPCs = workspace.NPCs
-                        local factoryEndPosition = Vector3.new(8812.583984375, 467.5847473144531, 11559.916015625)
+                        local factoryEndPosition = Vector3.new(8830.1904296875, 667.44140625, 11931.9921875)
                         
                         if workspace.Env.FactoryPool.hitbox:FindFirstChild("health") and workspace.Env.FactoryPool.hitbox:FindFirstChild("health").Enabled == true then
                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
