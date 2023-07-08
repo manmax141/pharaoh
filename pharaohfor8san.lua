@@ -1860,10 +1860,10 @@ local s, e = pcall(function()
     local function BypassErrorBan()
         for _,v in pairs(getconnections(game:GetService("ScriptContext").Error)) do
             v:Disable()
-         end
-         for _,v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
+        end
+        for _,v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
             v:Disable()
-         end
+        end
     end
     BypassErrorBan()
     game:GetService("Players").LocalPlayer.Idled:connect(function()
@@ -2616,7 +2616,7 @@ local s, e = pcall(function()
                         -- task.spawn(EquipTool)
                         
                         local NPCs = workspace.NPCs
-                        local factoryEndPosition = Vector3.new(8830.1904296875, 667.44140625, 11931.9921875)
+                        local factoryEndPosition = Vector3.new(8830.1904296875, 650.44140625, 11931.9921875)
                         
                         if workspace.Env.FactoryPool.hitbox:FindFirstChild("health") and workspace.Env.FactoryPool.hitbox:FindFirstChild("health").Enabled == true then
                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
