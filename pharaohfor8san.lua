@@ -1,12 +1,23 @@
+repeat task.wait(3) until game.Players.LocalPlayer ~= nil and game.Players.LocalPlayer.Character ~= nil
 local s, e = pcall(function()
+    local gs = game:GetService("GuiService")
+    gs.ErrorMessageChanged:Connect(function()
+        task.wait(2)
+        gs:ClearError()
+        for i = 0,500 do
+            game:GetService("TeleportService"):Teleport(1730877806, game.Players.LocalPlayer)
+        end
+    end)
+   
     local function BypassErrorBan()
         for _,v in pairs(getconnections(game:GetService("ScriptContext").Error)) do
             v:Disable()
-         end
-         for _,v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
+        end
+        for _,v in pairs(getconnections(game:GetService("LogService").MessageOut)) do
             v:Disable()
-         end
+        end
     end
+
     function createLibrary()
         do -- library 
             function library()
@@ -287,6 +298,12 @@ local s, e = pcall(function()
             UI.Watermark.Visible = false
             UI.Parent = gethui()
             
+            game:GetService("UserInputService").InputBegan:Connect(function(i,p)
+                if i.KeyCode == Enum.KeyCode.RightControl then
+                    UI.Enabled = not UI.Enabled
+                end
+            end)
+
             Background.Top.Active = true
             
             local function startDragging(...)
@@ -455,7 +472,7 @@ local s, e = pcall(function()
                         else
                             if Args.Callback then
                                 BypassErrorBan()
-                                Args.Callback(Args.Default)
+                                task.spawn(Args.Callback, Args.Default)
                             end
                         end
                         Args.Callback = Args.Callback or Library.BlankFunction
@@ -1838,7 +1855,6 @@ local s, e = pcall(function()
                 ConfigFolder = "PharaohHubV4";
             })
             
-            -- writefile("logs.txt", game:Gret)
             local onoff = false
             UI.Obj.Keybinds.Visible = false
         end
@@ -1851,16 +1867,64 @@ local s, e = pcall(function()
     local vu = game:GetService("VirtualUser")
     local char = player.Character or player.CharacterAdded:Wait()
     task.wait(3)
-   
+  
     for i = 1,10 do task.wait(.1)
-        BypassErrorBan()
-    end
+    BypassErrorBan()
+   end
     game:GetService("Players").LocalPlayer.Idled:connect(function()
         vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         wait(1)
         vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
     end)
     
+    do -- auto rejoin to private server code
+        if game.PlaceId == 1730877806 then
+            createLibrary()
+            
+            local Pages = {
+                Main = UI:CreatePage({
+                    Name = "Main"
+                })
+            }
+            
+            local Tabs = {
+                AutoRejoin = Pages.Main:CreateLeftSection(
+                    "Auto Rejoin"
+                ),
+                
+            }
+
+            Tabs.AutoRejoin:CreateTextbox("AutoRejoinCode",{
+                Name = "Auto Rejoin Code",
+                DefaultText = "",
+                PlaceholderText = Configs.AutoRejoinCode or "123456...",
+                Callback = function(inputtedText)
+                    return inputtedText
+                end,
+                ClearTextOnFocus = false,
+                OnlyCallbackOnEnterPressed = false
+            })
+
+            if Configs.AutoRejoinCode ~= "" then
+                while task.wait(5) do
+                    local args = {
+                        [1] = Configs.AutoRejoinCode
+                    }
+                
+                    game:GetService("ReplicatedStorage").Events.reserved:InvokeServer(unpack(args))
+                    task.wait(3)
+                
+                    local args = {
+                        [1] = true
+                    }
+                
+                    game:GetService("Players").LocalPlayer.PlayerGui.chooseType.Frame.RemoteEvent:FireServer(unpack(args))
+                end
+            end
+
+        end
+    end
+
     if game.PlaceId == 3978370137 then
         -- first sea
         createLibrary()
@@ -1908,10 +1972,16 @@ local s, e = pcall(function()
             local char = player.Character or player.CharacterAdded:Wait()
             local hrp = char:WaitForChild("HumanoidRootPart")
 
+            -- if not workspace:FindFirstChild("Effects") then
+            --     if hrp:FindFirstChild(bvName) then
+            --         hrp:FindFirstChild(bvName):Destroy()
+            --     end
+            --     return
+            -- end
             if state == "Create" then
                if hrp:FindFirstChild(bvName) then
                     hrp:FindFirstChild(bvName):Destroy()
-               end
+               end  
                local bv = Instance.new("BodyVelocity")
                bv.Name = bvName
                bv.Parent = hrp
@@ -1925,13 +1995,14 @@ local s, e = pcall(function()
         end
 
         function NoClip(state)
-            local char = player.Character or player.CharacterAdded:Wait()
-            
+           pcall(function()
+            local char = player.Character
             for _,v in pairs(char:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.CanCollide = not state
                 end
             end
+           end)
         end
         
         function AutoFarm(state)
@@ -2026,8 +2097,10 @@ local s, e = pcall(function()
                         until player.PlayerGui:FindFirstChild("NPCCHAT")
                         
                         repeat rs.RenderStepped:Wait()
+                           pcall(function()
                             local GUI = player.PlayerGui:FindFirstChild("NPCCHAT")
                             firesignal(GUI:FindFirstChild("Frame"):FindFirstChild("go").MouseButton1Click)
+                           end)
                         until not player.PlayerGui:FindFirstChild("NPCCHAT")
                     end
                     if NPCs:FindFirstChild("Fishman Karate User") and hum and hum.Health > 1  then
@@ -2107,7 +2180,6 @@ local s, e = pcall(function()
                     if not Configs.AutoFarm then
                         return con:Disconnect()
                     end
-                    writefile("logs.txt", "died and redoing")
                     task.wait(2)
                     GoToFishmanLocation()
                 end)
@@ -2185,12 +2257,12 @@ local s, e = pcall(function()
         Tabs.AutoFarm:CreateDivider()
         Tabs.AutoFarm:CreateToggle("AutoFarm", {
             Name = "Auto Farm (Fishman Only)",
-            Default = false,
+            Default = Configs.AutoFarm,
             Callback = AutoFarm
         })
         Tabs.AutoFarm:CreateToggle("AutoQuest",{
             Name = "Auto Quest",
-            Default = false
+            Default = Configs.AutoQuest
         })
         local toolsDropdown = Tabs.AutoFarm:CreateDropdown("SelectedItemForAutoFarm",{
             Name = "Selected Item",
@@ -2209,7 +2281,7 @@ local s, e = pcall(function()
         })
         Tabs.AutoFarm:CreateToggle("FastAttackAutoFarm",{
             Name = "Fast Attack (Depends on ping)",
-            Default = false
+            Default = Configs.FastAttackAutoFarm
         })
         Tabs.AutoFarm:CreateDivider()
         Tabs.AutoFarm:CreateSlider("TweenSpeed", {
@@ -2223,7 +2295,7 @@ local s, e = pcall(function()
         
         Tabs.AutoStats:CreateToggle("AutoStats", {
             Name = "Auto Stats",
-            Default = false,
+            Default = Configs.AutoStats,
             Callback = AutoStats
         })
         Tabs.AutoStats:CreateDropdown("SelectedStat",{
@@ -2250,7 +2322,7 @@ local s, e = pcall(function()
         function GetDist(p1, p2, range)
             p1 = typeof(p1) == "Vector3" and p1 or p1.Position
             p2 = typeof(p2) == "Vector3" and p2 or p2.Position
-                                        
+            
            if range then
             return (p1-p2).magnitude <= range
            else
@@ -2266,14 +2338,35 @@ local s, e = pcall(function()
         end
     
         local currentTween
+        local tweenDB = true
         function Tween(...)
-            if currentTween then
-                currentTween:Cancel()
+            if tweenDB then
+                if currentTween then
+                    currentTween:Cancel()
+                end
+                currentTween = ts:Create(...)
+                return currentTween
             end
-            currentTween = ts:Create(...)
-            return currentTween
         end
-        
+
+        -- tp back fix
+        function cancelTween()
+            for _,v in pairs(player.PlayerGui.Notifications:GetDescendants()) do
+                if v:IsA("TextLabel") and v.Text:find(player.Name) then
+                    
+                    if currentTween then 
+                        currentTween:Cancel()
+                        currentTween = nil
+                        tweenDB = false
+                        task.wait(8)
+                        tweenDB = true
+                    end
+
+                end
+            end
+        end
+        player.PlayerGui.Notifications.DescendantAdded:Connect(cancelTween)
+
         local bvName = tostring(math.random(1,135135135))
         function Velocity(state)
             local char = player.Character or player.CharacterAdded:Wait()
@@ -2296,13 +2389,16 @@ local s, e = pcall(function()
         end
 
         function NoClip(state)
-            local char = player.Character or player.CharacterAdded:Wait()
-            
-            for _,v in pairs(char:GetChildren()) do
-                if v:IsA("BasePart") then
-                    v.CanCollide = not state
+            pcall(function()
+
+                local char = player.Character
+                
+                for _,v in pairs(char:GetChildren()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = not state
+                    end
                 end
-            end
+            end)
         end
         
         function GetPlayerItems()
@@ -2323,7 +2419,117 @@ local s, e = pcall(function()
             return tools
         end
         
+        local jumpCooldown = true
+        function AutoJump()
+            if jumpCooldown then 
+                jumpCooldown = false
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hrp = char:WaitForChild("HumanoidRootPart")
+                local hum = char:WaitForChild("Humanoid")
+                
+                if player.Backpack:FindFirstChild("Rokushiki") or player.Character:FindFirstChild("Rokushiki") then
+                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Geppo",{["char"] = char,["cf"] = hrp.CFrame})
+                else
+                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Sky Walk2",{["char"] = char,["cf"] = hrp.CFrame})
+                end
+                task.wait(1)
+                jumpCooldown = true
+            end
+        end
+
+        local horoAttackCooldown = true
+        local fireServer = Instance.new("RemoteEvent").FireServer
+        
+        function AutoHoroAttack(hrp, seg)
+            local function CleanUp()
+
+                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                    if v:IsA("RemoteEvent") and v.Name:find(player.Name) then
+                        v:Destroy()
+                    end
+                end 
+                
+            end
+
+            local function FireAll(args)
+
+                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                    if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
+                        fireServer(v, unpack(args))
+                    end
+                end 
+                
+            end
+            
+            local hadBV = false
+            if horoAttackCooldown then horoAttackCooldown = false
+                CleanUp()
+                -- if playesr.Character:FindFirstChild("HumanoidRootPart"):FindFirstChild(bvName) then
+                    -- hadBV = true
+                -- end
+                -- Velocity("Remove")
+                delay(25, function()
+                    horoAttackCooldown = true
+                end)
+
+                local args = {
+                    [1] = "Mini Hollow Barrage"
+                }
+                                         
+                game:GetService("ReplicatedStorage").Events.Skill:InvokeServer(unpack(args))
+                
+                task.wait(.5)
+                
+                local args = {
+                    [1] = {
+                        ["Target"] = hrp,
+                        ["cf"] = hrp.CFrame
+                    }
+                }
+
+                FireAll(args)
+                
+                task.wait(.5)
+
+                -- delay(1, function()
+                --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
+                -- end)
+
+
+                local effects = workspace.Effects
+                local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
+
+                for i = 0,seg or Configs.HoroAttackSegements do
+                    if not h then break end
+                    spawn(function()
+                        local args = {
+                            [1] = h,
+                            [2] = hrp.CFrame,
+                            [3] = hrp
+                        }
+                        
+                        FireAll(args)
+                    end)
+                end
+
+                effects.Parent = game.ReplicatedStorage
+                
+
+                delay(18, function()
+                    effects.Parent = workspace
+                    if hadBV then
+                        -- Velocity("Create")
+                    end
+                end)
+
+                task.wait(20)
+                horoAttackCooldown = true
+            end
+
+        end
+
         function AutoFactory(state)
+            if game.ReplicatedStorage.reservedCode.Value == "" then return end
             local char = player.Character or player.CharacterAdded:Wait()
             local hrp = char:WaitForChild("HumanoidRootPart")
             local hum = char:WaitForChild("Humanoid")
@@ -2334,55 +2540,55 @@ local s, e = pcall(function()
                 local hrp = char:WaitForChild("HumanoidRootPart")
                 local hum = char:WaitForChild("Humanoid")
                 
-                local function AutoAttack(v, k)
-                    if canAttack then canAttack = false
-                        if Configs.FastAttackAutoFactory then
-                                for i = 1, 4 do 
+                -- local function AutoAttack(v, k)
+                --     if canAttack then canAttack = false
+                --         if Configs.FastAttackAutoFactory then
+                --                 for i = 1, 4 do 
 
-                                    local ohTable1 = {
-                                        [1] = "swingsfx",
-                                        [2] = k,
-                                        [3] = i,
-                                        [4] = "Ground"
-                                    }
+                --                     local ohTable1 = {
+                --                         [1] = "swingsfx",
+                --                         [2] = k,
+                --                         [3] = i,
+                --                         [4] = "Ground"
+                --                     }
 
-                                   task.spawn(function()
-                                    game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
-                                   end)
+                --                    task.spawn(function()
+                --                     game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
+                --                    end)
                                         
-                                    local ohTable1 = {
-                                        [1] = "damage",
-                                        [2] = v,
-                                        [3] = k,
-                                        [4] = {
-                                            [1] = i,
-                                            [2] = "Ground",
-                                            [3] = k
-                                        },
-                                        [5] = true,
-                                        ["aircombo"] = "Ground"
-                                    }
-                                    task.spawn(function()
+                --                     local ohTable1 = {
+                --                         [1] = "damage",
+                --                         [2] = v,
+                --                         [3] = k,
+                --                         [4] = {
+                --                             [1] = i,
+                --                             [2] = "Ground",
+                --                             [3] = k
+                --                         },
+                --                         [5] = true,
+                --                         ["aircombo"] = "Ground"
+                --                     }
+                --                     task.spawn(function()
 
-                                    game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
-                                    end)
-                                     task.wait(.15)
-                                end
-                            else
-                                for i = 1,4 do 
-                                    vim:SendMouseButtonEvent(0, 1, 0, true, game, 1)
-                                    task.wait(.35)
-                                end
-                        end
+                --                     game:GetService("ReplicatedStorage").Events.CombatRegister:InvokeServer(ohTable1)
+                --                     end)
+                --                      task.wait(.15)
+                --                 end
+                --             else
+                --                 for i = 1,4 do 
+                --                     vim:SendMouseButtonEvent(0, 1, 0, true, game, 1)
+                --                     task.wait(.35)
+                --                 end
+                --         end
                         
-                        task.wait(1.35)
-                        canAttack = true
-                    end
-                end
+                --         task.wait(1.35)
+                --         canAttack = true
+                --     end
+                -- end
                 local equipCooldown = true
                 local function EquipTool()
                     if equipCooldown then
-                        equipCooldown = false
+                        equipCooldown= false
                         local char = player.Character or player.CharacterAdded:Wait()
                         local hrp = char:WaitForChild("HumanoidRootPart")
                         local hum = char:WaitForChild("Humanoid")
@@ -2397,31 +2603,68 @@ local s, e = pcall(function()
                     end
                 end
 
-                Velocity("Create")
-                repeat 
+                Velocity("Create")    
+                
+                task.spawn(function()
+                    repeat
+                        rs.RenderStepped:Wait()
+                        task.spawn(AutoJump)
+                        task.spawn(NoClip, true)
+                    until not Configs.AutoFactory
+                end)
+
+                repeat
                     rs.RenderStepped:Wait() 
-                   
-                    local NPCs = workspace.NPCs
-                    
-                    if NPCs:FindFirstChild( "Devil Fruit Scientist" ) or NPCs:FindFirstChild( "Scientist" ) and hum and hum.Health > 1  then
-                        local NPC = NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Scientist")
-                        local npcHRP = NPC:WaitForChild("HumanoidRootPart")
+                  
+                    pcall(function()
+                       
+                        -- task.spawn(EquipTool)
                         
-                        NoClip(true)
-                        task.spawn(EquipTool)
+                        local NPCs = workspace.NPCs
+                        local factoryEndPosition = Vector3.new(8830.1904296875, 650.44140625, 11931.9921875)
                         
-                        if GetDist(hrp, npcHRP, 10) then
-                            hrp.CFrame = npcHRP.CFrame*CFrame.new(0,-9,0)
-                            task.spawn(function()
-                                AutoAttack(npcHRP, "Melee")
-                            end)
-                        else
-                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,-9,0)})
+                        if workspace.Env.FactoryPool.hitbox:FindFirstChild("health") and workspace.Env.FactoryPool.hitbox:FindFirstChild("health").Enabled == true then
+                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
                             tween:Play()
                             tween.Completed:Wait()
+                            task.spawn(AutoHoroAttack, hrp)
+                        else
+                            if NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law") then
+                                for _, NPC in pairs(NPCs:GetChildren()) do
+                                    if not Configs.AutoFactory then break end
+                                    if( NPC.Name == "Scientist" or NPC.Name == "Devil Fruit Scientist" or NPC.Name == "Law") and NPC.Info.Target.Value == nil then
+                                        repeat rs.RenderStepped:Wait()
+                                            local npcHRP = NPC:WaitForChild("HumanoidRootPart")
+            
+                                            Velocity("Create")
+                                            local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, npcHRP)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = npcHRP.CFrame*CFrame.new(0,9,0)})
+                                            tween:Play()
+
+                                        until NPC.Info.Target.Value ~= nil or not Configs.AutoFactory
+                                    end
+                                end
+
+                                for _, NPC in pairs(NPCs:GetChildren()) do
+                                    if( NPC.Name == "Scientist" or NPC.Name == "Devil Fruit Scientist" or NPC.Name == "Law") and NPC.Info.Target.Value == nil then
+                                        return
+                                    end
+                                end
+                            
+                                local NPC = NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law")
+                            
+                                if NPC then
+                                    Velocity("Create")
+                                    local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, factoryEndPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(factoryEndPosition)})
+                                    tween:Play()
+                                    tween.Completed:Wait()
+                                    
+                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 150)
+                                end
+                            end
                         end
-                    end
-                  
+                    end)
+                 
+
                 until not Configs.AutoFactory
             end
             
@@ -2431,10 +2674,28 @@ local s, e = pcall(function()
                 local hrp = char:WaitForChild("HumanoidRootPart")
                 local hum = char:WaitForChild("Humanoid")
 
-                repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 50) or not Configs.AutoFactory
+                repeat rs.RenderStepped:Wait() until GetDist(hrp, FactoryPosition, 2500) or not Configs.AutoFactory
                 if not Configs.AutoFactory then return end
-                Velocity("Create")
-                Start()
+                task.spawn(function()
+                    repeat rs.RenderStepped:Wait()
+                        task.spawn(AutoJump)
+                        task.spawn(NoClip, true)
+                    until not Configs.AutoFactory
+                end)
+                repeat rs.RenderStepped:Wait() 
+                    if GetDist(hrp, FactoryPosition, 45) then
+                        Velocity("Create")
+                        Start()
+                    else
+                        Velocity("Create")
+                        local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, FactoryPosition)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(FactoryPosition)})
+                        tween:Play()
+                        
+                        tween.Completed:Wait()
+                        Start()
+                    end
+                until not Configs.AutoFactory
+                
             end
             
             do -- Handle Dying so you respawn and keep autofarming
@@ -2449,7 +2710,7 @@ local s, e = pcall(function()
             end
          
             if state then
-
+                
                 if GetDist(hrp, FactoryPosition, 45) then
                     -- fight factory people
                     Start()
@@ -2458,14 +2719,192 @@ local s, e = pcall(function()
                     GoToFactoryLocation()
                 end
             else
+                task.wait(.35)
                 if currentTween then 
                     currentTween:Cancel() 
                 end
                 Velocity("Remove")
                 NoClip(false)
             end
-
+            
         end
+
+        function AutoPica(state)
+            if game.ReplicatedStorage.reservedCode.Value == "" then return end
+            if state then
+
+                local char = player.Character or player.CharacterAdded:Wait()
+                local hrp = char:WaitForChild("HumanoidRootPart")
+                local hum = char:WaitForChild("Humanoid")
+
+                local FirstPosition = Vector3.new(8196.4794921875, 223.81790161132812, 10814.416015625)
+                local SecondPosition = Vector3.new(8868.1162109375, 167.18443298339844, 10271.7880859375)
+                local ThirdPosition = Vector3.new(8678.1884765625, 197.7727508544922, 9551.142578125)
+                local FourthPosition = Vector3.new(7885.84765625, 848.3682861328125, 10140.169921875)
+
+                Velocity("Create")
+                task.spawn(function()
+                    repeat rs.RenderStepped:Wait()
+                        NoClip(true)
+                        AutoJump()
+                    until not Configs.AutoPica
+                end)
+                
+                local function GoTo(position)
+                    if not Configs.AutoPica then return end
+                    local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = CFrame.new(position)})
+                    tween:Play()
+
+                    tween.Completed:Wait()
+                    if not Configs.AutoPica then return end
+
+                    repeat rs.RenderStepped:Wait() 
+                        if workspace.NPCs:FindFirstChild("Donmingo Family") then
+                            task.spawn(AutoHoroAttack, workspace.NPCs:FindFirstChild("Donmingo Family"):FindFirstChild("HumanoidRootPart"), 500)
+                        end
+                    until not workspace.NPCs:FindFirstChild("Donmingo Family") or not Configs.AutoPica
+
+                    task.wait()
+                end
+
+                function KillNPCs()
+                    if GetDist(hrp, FirstPosition, 75) then 
+                        GoTo(FirstPosition)
+                        GoTo(SecondPosition)
+                        GoTo(ThirdPosition)
+                        GoTo(FourthPosition)
+                    elseif GetDist(hrp, SecondPosition, 75) then
+                        GoTo(SecondPosition)
+                        GoTo(FirstPosition)
+                        GoTo(ThirdPosition)
+                        GoTo(FourthPosition)
+                    elseif GetDist(hrp, ThirdPosition, 75) then
+                        GoTo(ThirdPosition)
+                        GoTo(FirstPosition)
+                        GoTo(SecondPosition)
+                        GoTo(FourthPosition)
+                    elseif GetDist(hrp, FourthPosition, 75) then
+                        GoTo(FourthPosition)
+                        GoTo(FirstPosition)
+                        GoTo(SecondPosition)
+                        GoTo(ThirdPosition)
+                    else
+                        GoTo(FirstPosition)
+                        GoTo(SecondPosition)
+                        GoTo(ThirdPosition)
+                        GoTo(FourthPosition)
+                    end
+                end
+
+                function AttackPica()
+                    repeat rs.RenderStepped:Wait()
+
+                        local pica = workspace.NPCs:FindFirstChild("Pica")
+                        if pica then
+                            local picaHRP = pica:FindFirstChild("HumanoidRootPart")
+        
+                            if GetDist(hrp, picaHRP, 45) then
+                                hrp.CFrame = picaHRP.CFrame*CFrame.new(0,30,0)
+                                AutoHoroAttack(picaHRP)
+                            else
+                                local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, picaHRP.CFrame*CFrame.new(0,30,0))/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = picaHRP.CFrame*CFrame.new(0,30,0)})
+                                tween:Play()
+                                
+                                tween.Completed:Wait()
+                            end
+    
+                        end
+                    until not workspace.NPCs:FindFirstChild("Pica") or not Configs.AutoPica
+                end
+                
+                repeat rs.RenderStepped:Wait()
+                    if not workspace.NPCs:FindFirstChild("Pica") then
+                        KillNPCs()
+                    else
+                        AttackPica()
+                    end
+                until not Configs.AutoPica
+
+            else
+                if currentTween then
+                    currentTween:Cancel()
+                end
+                Velocity("Remove")
+                NoClip(false)
+            end 
+        end
+
+        local legs = {
+            ["Kikoku"] = true
+        }
+
+        local dbs = {}
+        function WebhookItem(itemName)
+            if itemName:find("Cyborg") then return end
+            if dbs[itemName] then return end
+                dbs[itemName] = true
+                delay(3, function()
+                    dbs[itemName] = nil
+                end)
+                local str = game.Players.LocalPlayer.Name.." Got a drop"
+                if legs[itemName] then
+                    str = "@everyone "..game.Players.LocalPlayer.Name.." Got a drop"
+                else
+                    str = game.Players.LocalPlayer.Name.." Got a drop"
+                end
+    
+                local url = "https://discord.com/api/webhooks/1125543508225306705/WWuLTp5a36vdOQxRpaZ6ZzxzgAQ-P9_pFsWMBJMhTOOeWjO8vToWJ25V4S08V1xXh_g7"
+                local data = {
+                    ["content"] = str,
+                    ["embeds"] = {
+                        {
+                            ["title"] = itemName,
+                            ["description"] = "",
+                            ["type"] = "rich",
+                            ["color"] = tonumber(0x7269da),
+                            ["image"] = {
+                                ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                                tostring(game:GetService("Players").LocalPlayer.Name)
+                            },
+                            ["footer"] = {
+                                ["text"] = "Pharaoh Hub V2.0"
+                            }
+                        }
+                    }
+                }
+                
+                local headers = {
+                    ["content-type"] = "application/json"
+                }
+    
+                local newdata = game:GetService("HttpService"):JSONEncode(data)
+                
+                local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+                local abcdef2 = {Url = Configs.WebhookURL, Body = newdata, Method = "POST", Headers = headers}
+
+                request(abcdef)
+                request(abcdef2)
+        end
+        local oldv = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
+        game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Changed:Connect(function()
+            local v = game:GetService("HttpService"):JSONDecode(game:GetService("ReplicatedStorage")["Stats"..player.Name].Inventory.Inventory.Value)
+            local newItem
+            for item, itemValue in pairs(v) do
+                if not oldv[item] or tonumber(v[item]) > tonumber(oldv[item]) then
+                    newItem = item
+                    break
+                end
+            end
+            oldv = v
+            WebhookItem(newItem)
+        end)
+
+        rs.RenderStepped:Connect(function()
+            if currentTween or hrp:FindFirstChild(bvName) then
+                AutoJump()
+            end
+        end)
+
         local Pages = {
             Main = UI:CreatePage({
                 Name = "Main"
@@ -2476,41 +2915,83 @@ local s, e = pcall(function()
             AutoFactory = Pages.Main:CreateLeftSection(
                 "Auto Factory"
             ),
-            
+            AutoPica = Pages.Main:CreateRightSection(
+                "Auto Pica"
+            ),
+            InstantKill = Pages.Main:CreateLeftSection(
+                "Instant Kill Configuration"
+            ),
+            AutoWebhook = Pages.Main:CreateRightSection(
+                "Auto Webhook"
+            )
         }
         
         Tabs.AutoFactory:CreateToggle("AutoFactory", {
             Name = "Auto Factory",
-            Default = false,
+            Default = Configs.AutoFactory,
             Callback = AutoFactory
         })
-        local toolsDropdown = Tabs.AutoFactory:CreateDropdown("SelectedItemForAutoFactory",{
-            Name = "Selected Item",
-            ItemSelecting = true,
-            Values = GetPlayerItems(),
-            DefaultItemSelected = GetPlayerItems()[1],
-            SelectType = "Single"
-        })
-        Tabs.AutoFactory:CreateButton("Refresh", function()
-            toolsDropdown:Set(GetPlayerItems())
-        end)
         Tabs.AutoFactory:CreateDivider()
-        Tabs.AutoFactory:CreateToggle("HitboxExtender",{
-            Name = "Hitbox Extender",
-            Default = false
+        -- local toolsDropdown = Tabs.AutoFactory:CreateDropdown("SelectedItemForAutoFactory",{
+        --     Name = "Selected Item",
+        --     ItemSelecting = true,
+        --     Values = GetPlayerItems(),
+        --     DefaultItemSelected = GetPlayerItems()[1],
+        --     SelectType = "Single"
+        -- })
+        -- Tabs.AutoFactory:CreateButton("Refresh", function()
+        --     toolsDropdown:Set(GetPlayerItems())
+        -- end)
+        -- Tabs.AutoFactory:CreateDivider()
+        -- Tabs.AutoFactory:CreateToggle("HitboxExtender",{
+        --     Name = "Hitbox Extender",
+        --     Default = false
+        -- })
+        -- Tabs.AutoFactory:CreateToggle("FastAttackAutoFactory",{
+        --     Name = "Fast Attack (Depends on ping)",
+        --     Default = false
+        -- })
+        -- Tabs.AutoFactory:CreateDivider()
+        Tabs.AutoFactory:CreateTextbox("AutoRejoinCode",{
+            Name = "Auto Rejoin Code",
+            DefaultText = "",
+            PlaceholderText = "123456...",
+            Callback = function(inputtedText)
+                return inputtedText
+            end,
+            ClearTextOnFocus = false,
+            OnlyCallbackOnEnterPressed = false
         })
-        Tabs.AutoFactory:CreateToggle("FastAttackAutoFactory",{
-            Name = "Fast Attack (Depends on ping)",
-            Default = false
-        })
-        Tabs.AutoFactory:CreateDivider()
         Tabs.AutoFactory:CreateSlider("TweenSpeed", {
             Name = "Tween Speed",
             AllowOutOfRange = false,
             Digits = 2,
             Default = 50,
-            Max = 75,
+            Max = 115,
             Min = 10
+        })
+        Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
+            Name = "Stack Value",
+            AllowOutOfRange = false,
+            Digits = 1,
+            Default = 500,
+            Max = 9500,
+            Min = 50
+        })
+        Tabs.AutoPica:CreateToggle("AutoPica", {
+            Name = "Auto Pica",
+            Default = Configs.AutoPica,
+            Callback = AutoPica
+        })
+        Tabs.AutoWebhook:CreateTextbox("WebhookURL",{
+            Name = "Webhook URL",
+            DefaultText = "",
+            PlaceholderText = "123456...",
+            Callback = function(inputtedText)
+                return inputtedText
+            end,
+            ClearTextOnFocus = false,
+            OnlyCallbackOnEnterPressed = false
         })
     end
 end)
