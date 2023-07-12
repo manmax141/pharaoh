@@ -18,6 +18,10 @@ local s, e = pcall(function()
         end
     end
 
+    local HttpService = game:GetService("HttpService")
+    local scriptID =  HttpService:GenerateGUID(false)
+    getgenv().scriptID = scriptID
+
     function createLibrary()
         do -- library 
             function library()
@@ -42,8 +46,7 @@ local s, e = pcall(function()
             local Run = game:GetService("RunService")
             local UIS = game:GetService("UserInputService")
             local TS = game:GetService("TweenService")
-            local HttpService = game:GetService("HttpService")
-            
+
             local plr = Players.LocalPlayer
             
             local mouse = plr:GetMouse()
@@ -2345,8 +2348,10 @@ local s, e = pcall(function()
     
         local currentTween
         local tweenDB = true
+        local tweenTick = tick()
         function Tween(...)
             if tweenDB then
+                tweenTick = tick()
                 if currentTween then
                     currentTween:Cancel()
                 end
@@ -2505,18 +2510,21 @@ local s, e = pcall(function()
                 local effects = workspace.Effects
                 local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
-                for i = 0,seg or Configs.HoroAttackSegements do
-                    if not h then break end
-                    spawn(function()
-                        local args = {
-                            [1] = h,
-                            [2] = hrp.CFrame,
-                            [3] = hrp
-                        }
-                        
-                        FireAll(args)
-                    end)
-                end
+                coroutine.wrap(function()
+                    for i = 0,seg or Configs.HoroAttackSegements do task.wait()
+                        coroutine.wrap(function()
+                            local args = {
+                                [1] = h,
+                                [2] = hrp.CFrame,
+                                [3] = hrp
+                            }
+                            
+                            FireAll(args)
+                        end)()
+                    end
+                end)()
+
+                task.wait(.35)
 
                 effects.Parent = game.ReplicatedStorage
                 
@@ -2847,6 +2855,7 @@ local s, e = pcall(function()
         local dbs = {}
         function WebhookItem(itemName)
             if itemName:find("Cyborg") then return end
+            if getgenv().scriptID ~= scriptID then return end
             if dbs[itemName] then return end
                 dbs[itemName] = true
                 delay(3, function()
@@ -2906,7 +2915,10 @@ local s, e = pcall(function()
         end)
 
         rs.RenderStepped:Connect(function()
-            if currentTween or hrp and hrp:FindFirstChild(bvName) then
+         
+            local char = player.Character or player.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart")
+            if Configs.AutoFactory or Configs.AutoPica then
                 AutoJump()
             end
         end)
