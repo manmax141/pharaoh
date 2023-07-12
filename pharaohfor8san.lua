@@ -1869,7 +1869,7 @@ local s, e = pcall(function()
     for i = 1,10 do task.wait(.1)
         BypassErrorBan()
     end
-    
+
     task.wait(3)
    
     game:GetService("Players").LocalPlayer.Idled:connect(function()
@@ -2901,7 +2901,7 @@ local s, e = pcall(function()
         end)
 
         rs.RenderStepped:Connect(function()
-            if currentTween or hrp:FindFirstChild(bvName) then
+            if currentTween or hrp and hrp:FindFirstChild(bvName) then
                 AutoJump()
             end
         end)
