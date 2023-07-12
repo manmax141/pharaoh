@@ -1866,11 +1866,12 @@ local s, e = pcall(function()
     local vim = game:GetService("VirtualInputManager")
     local vu = game:GetService("VirtualUser")
     local char = player.Character or player.CharacterAdded:Wait()
-    task.wait(3)
-  
     for i = 1,10 do task.wait(.1)
-    BypassErrorBan()
-   end
+        BypassErrorBan()
+    end
+    
+    task.wait(3)
+   
     game:GetService("Players").LocalPlayer.Idled:connect(function()
         vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         wait(1)
