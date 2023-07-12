@@ -2511,7 +2511,7 @@ local s, e = pcall(function()
                 local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
                 coroutine.wrap(function()
-                    for i = 0,seg or Configs.HoroAttackSegements do task.wait()
+                    for i = 0,seg or Configs.HoroAttackSegements do rs.RenderStepped:Wait()
                         coroutine.wrap(function()
                             local args = {
                                 [1] = h,
