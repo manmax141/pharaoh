@@ -471,7 +471,6 @@ local s, e = pcall(function()
                             Args.Default = false
                         else
                             if Args.Callback then
-                                BypassErrorBan()
                                 task.spawn(Args.Callback, Args.Default)
                             end
                         end
@@ -1869,6 +1868,12 @@ local s, e = pcall(function()
     for i = 1,10 do task.wait(.1)
         BypassErrorBan()
     end
+
+    task.spawn(function()
+        while task.wait(.35) do
+            BypassErrorBan()
+        end
+    end)
 
     task.wait(3)
    
