@@ -2231,17 +2231,27 @@ local s, e = pcall(function()
             return tools
         end
         
+        local stats = {       
+            "Strength",
+            "Stamina",
+            "Defense",
+            "Sword Mastery",
+            "Devil Fruit Mastery"
+        }
+
         function AutoStats()
             task.spawn(function()
                 repeat task.wait(.5)
-                    if Configs.SelectedStat then
-                     local args = {
-                         [1] = Configs.SelectedStat:gsub(" ",""),
-                         [2] = nil,
-                         [3] = 1
-                     }
-                     
-                     game:GetService("ReplicatedStorage").Events.stats:FireServer(args[1], args[2], args[3])
+                    for _,v in pairs(stats) do
+                        if Configs[v] and Configs[v.."Slider"] >= game.ReplicatedStorage["Stats"..player.Name].Stats[v:gsub(" ","")].Value then
+                            local args = {
+                                [1] = v:gsub(" ",""),
+                                [2] = nil,
+                                [3] = 1
+                            }
+                            
+                            game:GetService("ReplicatedStorage").Events.stats:FireServer(args[1], args[2], args[3])
+                        end
                     end
                  until not Configs.AutoStats
             end)
@@ -2307,13 +2317,18 @@ local s, e = pcall(function()
             Default = Configs.AutoStats,
             Callback = AutoStats
         })
-        Tabs.AutoStats:CreateDropdown("SelectedStat",{
-            Name = "Selected Stat",
-            ItemSelecting = true,
-            Values = {"Strength", "Stamina", "Defense", "Gun Mastery", "Sword Mastery", "Black Leg Mastery", "Devil Fruit Mastery"},
-            DefaultItemSelected = "Strength",
-            SelectType = "Single"
-        })
+
+        for _, v in pairs(stats) do
+            Tabs.AutoStats:CreateSliderToggle(v.."Slider",v,{
+                Name = v;
+                SliderDefault = 500*3;
+                Min = 0;
+                Max = 500*3;
+                AllowOutOfRange = false; 
+                Digits = 2;
+                ToggleDefault = false;
+            })
+        end
     elseif game.PlaceId == 7465136166 then
         createLibrary()
 
@@ -2483,6 +2498,7 @@ local s, e = pcall(function()
                     horoAttackCooldown = true
                 end)
 
+                if not h or not hrp then horoAttackCooldown = true return end
                 local args = {
                     [1] = "Mini Hollow Barrage"
                 }
@@ -2512,6 +2528,7 @@ local s, e = pcall(function()
 
                 coroutine.wrap(function()
                     for i = 0,seg or Configs.HoroAttackSegements do rs.RenderStepped:Wait()
+                        if not h or not hrp then break end
                         coroutine.wrap(function()
                             local args = {
                                 [1] = h,
@@ -2672,7 +2689,7 @@ local s, e = pcall(function()
                                     tween:Play()
                                     tween.Completed:Wait()
                                     
-                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 150)
+                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 350)
                                 end
                             end
                         end
