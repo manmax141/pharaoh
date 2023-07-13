@@ -1869,12 +1869,12 @@ local s, e = pcall(function()
     local vu = game:GetService("VirtualUser")
     local char = player.Character or player.CharacterAdded:Wait()
     for i = 1,10 do task.wait(.1)
-        -- BypassErrorBan()
+        BypassErrorBan()
     end
 
     task.spawn(function()
         while task.wait(.35) do
-            -- BypassErrorBan()
+            BypassErrorBan()
         end
     end)
 
