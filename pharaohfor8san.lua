@@ -1869,12 +1869,12 @@ local s, e = pcall(function()
     local vu = game:GetService("VirtualUser")
     local char = player.Character or player.CharacterAdded:Wait()
     for i = 1,10 do task.wait(.1)
-        BypassErrorBan()
+        -- BypassErrorBan()
     end
 
     task.spawn(function()
         while task.wait(.35) do
-            BypassErrorBan()
+            -- BypassErrorBan()
         end
     end)
 
@@ -2498,7 +2498,7 @@ local s, e = pcall(function()
                     horoAttackCooldown = true
                 end)
 
-                if not h or not hrp then horoAttackCooldown = true return end
+                if not hrp then horoAttackCooldown = true return end
                 local args = {
                     [1] = "Mini Hollow Barrage"
                 }
