@@ -1877,7 +1877,7 @@ local s, e = pcall(function()
             BypassErrorBan()
         end
     end)
-
+    
     task.wait(3)
    
     game:GetService("Players").LocalPlayer.Idled:connect(function()
@@ -2465,7 +2465,7 @@ local s, e = pcall(function()
 
         local horoAttackCooldown = true
         local fireServer = Instance.new("RemoteEvent").FireServer
-        
+        local invokeServer = Instance.new("RemoteFunction").InvokeServer
         function AutoHoroAttack(hrp, seg)
             local function CleanUp()
 
@@ -2477,15 +2477,28 @@ local s, e = pcall(function()
                 
             end
 
-            local function FireAll(args)
-
-                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+            local function FireAll(batchArgs)
+                for _,v in ipairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
-                        fireServer(v, unpack(args))
+
+                        for _, args in ipairs(batchArgs) do
+                            fireServer(v, unpack(args))
+                        end
+                        
                     end
                 end 
-                
             end
+            
+
+            -- local function FireAll(args)
+            --     for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+            --         if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
+
+            --             fireServer(v, unpack(args))
+                        
+            --         end
+            --     end 
+            -- end
             
             local hadBV = false
             if horoAttackCooldown then horoAttackCooldown = false
@@ -2499,62 +2512,86 @@ local s, e = pcall(function()
                 end)
 
                 if not hrp then horoAttackCooldown = true return end
-                local args = {
-                    [1] = "Mini Hollow Barrage"
-                }
-                                         
-                game:GetService("ReplicatedStorage").Events.Skill:InvokeServer(unpack(args))
+
+           
                 
-                task.wait(.5)
+                task.wait(.75)
+
+                -- delay(1, function()
+                --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
+                -- end)
+
                 
-                local args = {
+                local effects = workspace.Effects
+
+               if Configs.RemoveEffects then
+                delay(.35, function()
+                    effects.Parent = game.ReplicatedStorage
+                end)
+                
+               
+               end
+
+                local s, f = pcall(function()
+                   if hrp.Parent.Name == player.Name then
+                    return 6500
+                   else
+                    return math.floor(hrp.Parent.Humanoid.MaxHealth/6)
+                   end
+                end)
+
+                local miniHollowFound, miniHollowEffect = pcall(function()
+                    return effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
+                end)
+
+                local args2 = {
                     [1] = {
                         ["Target"] = hrp,
                         ["cf"] = hrp.CFrame
                     }
                 }
 
-                FireAll(args)
                 
-                task.wait(.5)
+                local fireAllCoroutine = coroutine.wrap(FireAll)
 
-                -- delay(1, function()
-                --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
-                -- end)
+                local MainArgs = {
+                    [1] = (miniHollowFound and miniHollowEffect) or nil,
+                    [2] = hrp.CFrame,
+                    [3] = hrp
+                }
+                                         
+                local skill = game:GetService("ReplicatedStorage").Events.Skill
 
+                local batchArgs = {}
+                local batchSize = 3
+                invokeServer(skill, "Mini Hollow Barrage")
+                FireAll({args2})
 
-                local effects = workspace.Effects
-                local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
+                task.wait(1)
 
-                coroutine.wrap(function()
-                    for i = 0,seg or Configs.HoroAttackSegements do rs.RenderStepped:Wait()
-                        if not h or not hrp then break end
-                        coroutine.wrap(function()
-                            local args = {
-                                [1] = h,
-                                [2] = hrp.CFrame,
-                                [3] = hrp
-                            }
-                            
-                            FireAll(args)
-                        end)()
-                    end
-                end)()
-
-                task.wait(.35)
-
-                effects.Parent = game.ReplicatedStorage
-                
-
-                delay(18, function()
-                    effects.Parent = workspace
-                    if hadBV then
-                        -- Velocity("Create")
-                    end
+                delay(13, function()
+                    horoAttackCooldown = true
                 end)
+            
+                local i = 0
+                while i <= ((s and f) or 3500) and hrp do
+                    batchArgs[#batchArgs + 1] = MainArgs
+                    if #batchArgs >= batchSize then
+                        task.spawn(FireAll, batchArgs)
+                        batchArgs = {}
+                    end
+                    i += 1
+                end
 
-                task.wait(20)
-                horoAttackCooldown = true
+                delay(15, function()
+                    effects.Parent = workspace
+                end)   
+
+                if #batchArgs > 0 then
+                    task.spawn(FireAll, batchArgs)
+                end
+
+               
             end
 
         end
@@ -2689,7 +2726,7 @@ local s, e = pcall(function()
                                     tween:Play()
                                     tween.Completed:Wait()
                                     
-                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 350)
+                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"))
                                 end
                             end
                         end
@@ -2953,9 +2990,9 @@ local s, e = pcall(function()
             AutoPica = Pages.Main:CreateRightSection(
                 "Auto Pica"
             ),
-            InstantKill = Pages.Main:CreateLeftSection(
-                "Instant Kill Configuration"
-            ),
+            -- InstantKill = Pages.Main:CreateLeftSection(
+            --     "Instant Kill Configuration"
+            -- ),
             AutoWebhook = Pages.Main:CreateRightSection(
                 "Auto Webhook"
             )
@@ -2987,6 +3024,12 @@ local s, e = pcall(function()
         --     Default = false
         -- })
         -- Tabs.AutoFactory:CreateDivider()
+        Tabs.AutoFactory:CreateToggle("RemoveEffects", {
+            Name = "Remove Effects (Use if you lag only)",
+            Default = Configs.RemoveEffects
+        })
+        Tabs.AutoFactory:CreateDivider()
+
         Tabs.AutoFactory:CreateTextbox("AutoRejoinCode",{
             Name = "Auto Rejoin Code",
             DefaultText = "",
@@ -2997,6 +3040,7 @@ local s, e = pcall(function()
             ClearTextOnFocus = false,
             OnlyCallbackOnEnterPressed = false
         })
+        
         Tabs.AutoFactory:CreateSlider("TweenSpeed", {
             Name = "Tween Speed",
             AllowOutOfRange = false,
@@ -3005,14 +3049,14 @@ local s, e = pcall(function()
             Max = 115,
             Min = 10
         })
-        Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
-            Name = "Stack Value",
-            AllowOutOfRange = false,
-            Digits = 1,
-            Default = 500,
-            Max = 9500,
-            Min = 50
-        })
+        -- Tabs.InstantKill:CreateSlider("HoroAttackSegements", {
+        --     Name = "Stack Value",
+        --     AllowOutOfRange = false,
+        --     Digits = 1,
+        --     Default = 500,
+        --     Max = 9500,
+        --     Min = 50
+        -- })
         Tabs.AutoPica:CreateToggle("AutoPica", {
             Name = "Auto Pica",
             Default = Configs.AutoPica,
