@@ -2536,7 +2536,7 @@ local s, e = pcall(function()
                    if hrp.Parent.Name == player.Name then
                     return 6500
                    else
-                    return math.floor(hrp.Parent.Humanoid.MaxHealth/6)
+                    return math.floor(hrp.Parent.Humanoid.MaxHealth/8)
                    end
                 end)
 
@@ -2568,7 +2568,7 @@ local s, e = pcall(function()
                 FireAll({args2})
 
                 task.wait(1)
-
+                
                 delay(13, function()
                     horoAttackCooldown = true
                 end)
