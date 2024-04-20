@@ -2488,7 +2488,7 @@ local s, e = pcall(function()
                 -- end)
 
 
-                local effects = workspace.Effects
+                local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"Effects";
                 local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
 
                 for i = 0,seg or Configs.HoroAttackSegements do
@@ -2504,11 +2504,11 @@ local s, e = pcall(function()
                     end)
                 end
 
-                -- effects.Parent = game.ReplicatedStorage
+                effects.Parent = game.ReplicatedStorage
                 
 
                 delay(18, function()
-                    -- effects.Parent = workspace
+                    effects.Parent = workspace
                     if hadBV then
                         -- Velocity("Create")
                     end
