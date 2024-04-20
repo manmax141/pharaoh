@@ -39,14 +39,15 @@ local s, e = pcall(function()
             
             local mouse = plr:GetMouse()
             
-            -- local function r(f)
-            --     return f
-            -- end
+            if not LPH_OBFUSCATED then
+            local function r(f)
+                return f
+            end
+            LPH_JIT_MAX = r
+            LPH_NO_VIRTUALIZE = r
+            LPH_JIT = r
+            end
             
-            -- LPH_JIT_MAX = r
-            -- LPH_NO_VIRTUALIZE = r
-            -- LPH_JIT = r
-
             local Library = {}
             
             function Library:UpdateColorsUsingRegistry() -- feature is not done yet
@@ -164,17 +165,19 @@ local s, e = pcall(function()
             end)
             
             local updateEvent
-            updateEvent = Run.RenderStepped:Connect(function(dt)
-                if frame.Visible == false or not UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
-                    _dragging = false
-                    _dragging_offset = nil
-                end
-                if _dragging and _dragging_offset then
-                    local lerp = 0.3
-                    local finalPos = UDim2.fromOffset(mouse.X-_dragging_offset.X+(frame.AbsoluteSize.X*frame.AnchorPoint.X),mouse.Y-_dragging_offset.Y+36+(frame.AbsoluteSize.Y*frame.AnchorPoint.Y))
-                    frame.Position = frame.Position:Lerp(finalPos,lerp*(dt*60))
-                end
-            end)
+            LPH_JIT_MAX(function()
+                updateEvent = Run.RenderStepped:Connect(function(dt)
+                    if frame.Visible == false or not UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                        _dragging = false
+                        _dragging_offset = nil
+                    end
+                    if _dragging and _dragging_offset then
+                        local lerp = 0.3
+                        local finalPos = UDim2.fromOffset(mouse.X-_dragging_offset.X+(frame.AbsoluteSize.X*frame.AnchorPoint.X),mouse.Y-_dragging_offset.Y+36+(frame.AbsoluteSize.Y*frame.AnchorPoint.Y))
+                        frame.Position = frame.Position:Lerp(finalPos,lerp*(dt*60))
+                    end
+                end)
+            end)()
             
             return {inputBegan,inputEnded,updateEvent}
             end
@@ -1862,7 +1865,7 @@ local s, e = pcall(function()
             v:Disable()
         end
     end
-    -- BypassErrorBan()
+    BypassErrorBan()
     game:GetService("Players").LocalPlayer.Idled:connect(function()
         vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         wait(1)
