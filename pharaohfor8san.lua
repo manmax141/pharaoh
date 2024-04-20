@@ -2489,7 +2489,18 @@ local s, e = pcall(function()
 
 
                 local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"Effects";
-                local h = effects:FindFirstChild("MiniHollow"):FindFirstChild("Hitbox")
+                local ho = effects:FindFirstChild("MiniHollow")
+                local h = ho and ho:FindFirstChild("Hitbox")
+                
+if not h and ho then
+    h = Instance.new("Part")
+    h.Parent = ho
+    h.Name = "Hitbox"
+    h.Anchored = true
+    h.CanCollide = false
+    h.CFrame = ho:GetPivot()
+end
+    local hitbox = Instance.new()
 
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
