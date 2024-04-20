@@ -2514,11 +2514,11 @@ end
                     end)
                 end
 
-                effects.Parent = game.ReplicatedStorage
+                -- effects.Parent = game.ReplicatedStorage
                 
 
                 delay(18, function()
-                    effects.Parent = workspace
+                    -- effects.Parent = workspace
                     if hadBV then
                         -- Velocity("Create")
                     end
