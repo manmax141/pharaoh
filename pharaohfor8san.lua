@@ -2891,7 +2891,10 @@ local s, e = pcall(function()
             WebhookItem(newItem)
         end)
 
+        local player = game.Players.LocalPlayer;
         rs.RenderStepped:Connect(function()
+            local char = player.Character or player.CharacterAdded:Wait();
+            local hrp = char:WaitForChild("HumanoidRootPart");
             if currentTween or hrp:FindFirstChild(bvName) then
                 AutoJump()
             end
