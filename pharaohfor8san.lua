@@ -2987,3 +2987,5 @@ local s, e = pcall(function()
         })
     end
 end)
+
+print(not s and e);
