@@ -1862,7 +1862,7 @@ local s, e = pcall(function()
             v:Disable()
         end
     end
-    -- BypassErrorBan()
+    BypassErrorBan()
     game:GetService("Players").LocalPlayer.Idled:connect(function()
         vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         wait(1)
@@ -2435,7 +2435,7 @@ local s, e = pcall(function()
         function AutoHoroAttack(hrp, seg)
             local function CleanUp()
 
-                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                for _,v in pairs(game.ReplicatedStorage:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name) then
                         v:Destroy()
                     end
@@ -2445,7 +2445,7 @@ local s, e = pcall(function()
 
             local function FireAll(args)
 
-                for _,v in pairs(game.ReplicatedStorage.PlayerRemotes:GetChildren()) do
+                for _,v in pairs(game.ReplicatedStorage:GetChildren()) do
                     if v:IsA("RemoteEvent") and v.Name:find(player.Name)  then
                         fireServer(v, unpack(args))
                     end
