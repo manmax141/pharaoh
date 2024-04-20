@@ -247,11 +247,11 @@ local s, e = pcall(function()
                     -- makefolder(LibArgs.ConfigFolder)
                 -- end
             
-                if isfile(config_path) then
+                -- if isfile(config_path) then
                     Configs = {}
-                else
+                -- else
                     -- writefile(config_path,HttpService:JSONEncode(Configs))
-                end
+                -- end
             
                 local lastSave = os.clock()
                 local SAVE_DELAY = 0.1
