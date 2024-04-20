@@ -2300,16 +2300,16 @@ local s, e = pcall(function()
     elseif game.PlaceId == 7465136166 then
         createLibrary()
 
-        do -- Hitbox Extender
-            local o = getrenv()._G.hitbox.start
-            getrenv()._G.hitbox.start = function(...)
-                local args = {...}
-                if Configs.HitboxExtender then
-                    args[3] = Vector3.new(30,30,30)
-                end
-                return o(unpack(args))
-            end
-        end
+        -- do -- Hitbox Extender
+        --     local o = getrenv()._G.hitbox.start
+        --     getrenv()._G.hitbox.start = function(...)
+        --         local args = {...}
+        --         if Configs.HitboxExtender then
+        --             args[3] = Vector3.new(30,30,30)
+        --         end
+        --         return o(unpack(args))
+        --     end
+        -- end
 
         function GetDist(p1, p2, range)
             p1 = typeof(p1) == "Vector3" and p1 or p1.Position
