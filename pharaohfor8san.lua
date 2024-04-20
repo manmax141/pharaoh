@@ -2455,7 +2455,7 @@ local s, e = pcall(function()
             
             local hadBV = false
             if horoAttackCooldown then horoAttackCooldown = false
-                -- CleanUp()
+                CleanUp()
                 -- if playesr.Character:FindFirstChild("HumanoidRootPart"):FindFirstChild(bvName) then
                     -- hadBV = true
                 -- end
