@@ -2619,7 +2619,7 @@ local s, e = pcall(function()
                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
                             tween:Play()
                             tween.Completed:Wait()
-                            task.spawn(AutoHoroAttack, hrp)
+                            task.spawn(AutoHoroAttack, hrp, 150)
                         else
                             if NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law") then
                                 for _, NPC in pairs(NPCs:GetChildren()) do
