@@ -2520,7 +2520,7 @@ local s, e = pcall(function()
                 end
 
                 task.delay(1, function()
-                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
+                    -- game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
                 end)
 
                 -- effects.Parent = game.ReplicatedStorage
@@ -2958,11 +2958,11 @@ local s, e = pcall(function()
             Default = Configs.AutoFactory,
             Callback = AutoFactory
         })
-        Tabs.AutoFactory:CreateToggle("RemoveEffects", {
-            Name = "Remove Effects",
-            Default = Configs.RemoveEffects,
-            Callback = RemoveEffects
-        })
+        -- Tabs.AutoFactory:CreateToggle("RemoveEffects", {
+            -- Name = "Remove Effects",
+            -- Default = Configs.RemoveEffects,
+            -- Callback = RemoveEffects
+        -- })
         Tabs.AutoFactory:CreateDivider()
         -- local toolsDropdown = Tabs.AutoFactory:CreateDropdown("SelectedItemForAutoFactory",{
         --     Name = "Selected Item",
