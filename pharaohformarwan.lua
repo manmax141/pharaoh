@@ -2481,7 +2481,7 @@ local s, e = pcall(function()
 
                 FireAll(args)
 
-                local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"Effects";
+                local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"EffectsF";
                 local ho = effects:FindFirstChild("MiniHollow")
                 local h = ho and ho:FindFirstChild("Hitbox")
                 
@@ -2495,7 +2495,7 @@ local s, e = pcall(function()
                     h.Size = Vector3.new(15, 15, 15)
                 end
 
-                for i = 0,Configs.HoroAttackSegements do
+                for i = 0, Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
                         local args = {
