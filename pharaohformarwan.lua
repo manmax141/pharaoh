@@ -2730,6 +2730,14 @@ local s, e = pcall(function()
             
         end
 
+        function RemoveEffects(state)
+            if state and workspace:FindFirstChild"Effects" then
+                workspace.Effects.Parent = game.ReplicatedStorage
+            elseif not state and game.ReplicatedStorage:FindFirstChild"Effects" then
+                game.ReplicatedStorage.Effects.Parent = workspace
+            end
+        end
+
         function AutoPica(state)
             if game.ReplicatedStorage.reservedCode.Value == "" then return end
             if state then
@@ -2934,6 +2942,11 @@ local s, e = pcall(function()
             Name = "Auto Factory",
             Default = Configs.AutoFactory,
             Callback = AutoFactory
+        })
+        Tabs.AutoFactory:CreateToggle("RemoveEffects", {
+            Name = "Remove Effects",
+            Default = Configs.RemoveEffects,
+            Callback = RemoveEffects
         })
         Tabs.AutoFactory:CreateDivider()
         -- local toolsDropdown = Tabs.AutoFactory:CreateDropdown("SelectedItemForAutoFactory",{
