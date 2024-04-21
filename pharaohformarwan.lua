@@ -2481,10 +2481,19 @@ local s, e = pcall(function()
 
                 FireAll(args)
 
-                local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"EffectsF";
+                local effects = workspace:FindFirstChild("Effects");
                 local ho = effects:FindFirstChild("MiniHollow")
                 local h = ho and ho:FindFirstChild("Hitbox")
                 
+                if not effects then
+                    for _,v in pairs(game.ReplicatedStorage:GetChildren()) do
+                        if v.Name == "Effects" and v:IsA("Model") then
+                            effects = v;
+                            break;
+                        end
+                    end
+                end
+
                 if not h and ho then
                     h = Instance.new("Part")
                     h.Parent = ho
@@ -2731,11 +2740,14 @@ local s, e = pcall(function()
 
         function RemoveEffects(state)
             if state and workspace:FindFirstChild"Effects" then
-                workspace.Effects.Name = "EffectsF";
-                workspace.EffectsF.Parent = game.ReplicatedStorage;
-            elseif not state and game.ReplicatedStorage:FindFirstChild"EffectsF" then
-                game.ReplicatedStorage.EffectsF.Name = "Effects";
-                game.ReplicatedStorage.Effects.Parent = workspace;
+                workspace.Effects.Parent = game.ReplicatedStorage;
+            elseif not state then
+                for _,v in pairs(game.ReplicatedStorage:GetChildren()) do
+                    if v.Name == "Effects" and v:IsA("Model") then
+                        v.Parent = workspace;
+                        break;
+                    end
+                end
             end
         end
 
