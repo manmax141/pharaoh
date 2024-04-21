@@ -2620,7 +2620,7 @@ local s, e = pcall(function()
                 task.spawn(function()
                     repeat
                         rs.RenderStepped:Wait()
-                        task.spawn(AutoJump)
+                        -- task.spawn(AutoJump)
                         task.spawn(NoClip, true)
                     until not Configs.AutoFactory
                 end)
@@ -2690,7 +2690,7 @@ local s, e = pcall(function()
                 if not Configs.AutoFactory then return end
                 task.spawn(function()
                     repeat rs.RenderStepped:Wait()
-                        task.spawn(AutoJump)
+                        -- task.spawn(AutoJump)
                         task.spawn(NoClip, true)
                     until not Configs.AutoFactory
                 end)
@@ -2771,7 +2771,7 @@ local s, e = pcall(function()
                 task.spawn(function()
                     repeat rs.RenderStepped:Wait()
                         NoClip(true)
-                        AutoJump()
+                        -- AutoJump()
                     until not Configs.AutoPica
                 end)
                 
