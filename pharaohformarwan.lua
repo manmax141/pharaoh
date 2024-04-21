@@ -2661,7 +2661,7 @@ local s, e = pcall(function()
                                     tween:Play()
                                     tween.Completed:Wait()
                                     
-                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 450)
+                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), NPC.Name ~= "Law" and 450)
                                 end
                             end
                         end
