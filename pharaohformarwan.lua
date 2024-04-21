@@ -2472,14 +2472,14 @@ local s, e = pcall(function()
                 
                 task.wait(.5)
                 
-                -- local args = {
-                --     [1] = {
-                --         ["Target"] = hrp,
-                --         ["cf"] = hrp.CFrame * CFrame.new(0,-2.75,0);
-                --     }
-                -- }
+                local args = {
+                    [1] = {
+                        ["Target"] = hrp,
+                        ["cf"] = hrp.CFrame * CFrame.new(0,-2.75,0);
+                    }
+                }
 
-                -- FireAll(args)
+                FireAll(args)
 
                 local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"Effects";
                 local ho = effects:FindFirstChild("MiniHollow")
