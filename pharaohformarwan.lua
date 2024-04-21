@@ -287,7 +287,7 @@ local s, e = pcall(function()
             UI.Parent = gethui()
             
             game:GetService("UserInputService").InputBegan:Connect(function(i,p)
-                if i.KeyCode == Enum.KeyCode.RightControl then
+                if i.KeyCode == Enum.KeyCode.H then
                     UI.Enabled = not UI.Enabled
                 end
             end)
@@ -2472,19 +2472,14 @@ local s, e = pcall(function()
                 
                 task.wait(.5)
                 
-                local args = {
-                    [1] = {
-                        ["Target"] = hrp,
-                        ["cf"] = hrp.CFrame * CFrame.new(0,-2.75,0);
-                    }
-                }
+                -- local args = {
+                --     [1] = {
+                --         ["Target"] = hrp,
+                --         ["cf"] = hrp.CFrame * CFrame.new(0,-2.75,0);
+                --     }
+                -- }
 
-                FireAll(args)
-                
-                -- delay(1, function()
-                --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
-                -- end)
-
+                -- FireAll(args)
 
                 local effects = workspace:FindFirstChild("Effects") or game.ReplicatedStorage:FindFirstChild"Effects";
                 local ho = effects:FindFirstChild("MiniHollow")
@@ -2512,6 +2507,10 @@ local s, e = pcall(function()
                         FireAll(args)
                     end)
                 end
+
+                task.delay(1, function()
+                    game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
+                end)
 
                 -- effects.Parent = game.ReplicatedStorage
                 
