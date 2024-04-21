@@ -2492,14 +2492,15 @@ local s, e = pcall(function()
                 local ho = effects:FindFirstChild("MiniHollow")
                 local h = ho and ho:FindFirstChild("Hitbox")
                 
-if not h and ho then
-    h = Instance.new("Part")
-    h.Parent = ho
-    h.Name = "Hitbox"
-    h.Anchored = true
-    h.CanCollide = false
-    h.CFrame = ho:GetPivot()
-end
+                if not h and ho then
+                    h = Instance.new("Part")
+                    h.Parent = ho
+                    h.Name = "Hitbox"
+                    h.Anchored = true
+                    h.CanCollide = false
+                    h.CFrame = ho:GetPivot()
+                    h.Size = Vector3.new(15, 15, 15)
+                end
 
                 for i = 0,seg or Configs.HoroAttackSegements do
                     if not h then break end
@@ -2629,7 +2630,7 @@ end
                             local tween = Tween(hrp,TweenInfo.new(GetDist(hrp, workspace.Env.FactoryPool.hitbox.Position)/Configs.TweenSpeed,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.Env.FactoryPool.hitbox.CFrame*CFrame.new(0,8,0)})
                             tween:Play()
                             tween.Completed:Wait()
-                            task.spawn(AutoHoroAttack, hrp, 150)
+                            task.spawn(AutoHoroAttack, hrp)
                         else
                             if NPCs:FindFirstChild("Scientist") or NPCs:FindFirstChild("Devil Fruit Scientist") or NPCs:FindFirstChild("Law") then
                                 for _, NPC in pairs(NPCs:GetChildren()) do
@@ -2660,7 +2661,7 @@ end
                                     tween:Play()
                                     tween.Completed:Wait()
                                     
-                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 150)
+                                    task.spawn(AutoHoroAttack, NPC:WaitForChild("HumanoidRootPart"), 450)
                                 end
                             end
                         end
