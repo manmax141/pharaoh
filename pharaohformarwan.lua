@@ -2732,9 +2732,11 @@ local s, e = pcall(function()
 
         function RemoveEffects(state)
             if state and workspace:FindFirstChild"Effects" then
-                workspace.Effects.Parent = game.ReplicatedStorage
-            elseif not state and game.ReplicatedStorage:FindFirstChild"Effects" then
-                game.ReplicatedStorage.Effects.Parent = workspace
+                workspace.Effects.Name = "EffectsF";
+                workspace.EffectsF.Parent = game.ReplicatedStorage;
+            elseif not state and game.ReplicatedStorage:FindFirstChild"EffectsF" then
+                game.ReplicatedStorage.EffectsF.Name = "Effects";
+                game.ReplicatedStorage.Effects.Parent = workspace;
             end
         end
 
