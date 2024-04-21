@@ -2481,8 +2481,6 @@ local s, e = pcall(function()
 
                 FireAll(args)
                 
-                task.wait(.5)
-
                 -- delay(1, function()
                 --     game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Explosive Snap")
                 -- end)
