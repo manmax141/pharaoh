@@ -243,15 +243,15 @@ local s, e = pcall(function()
             if LibArgs.ConfigFolder then
                 local config_path = LibArgs.ConfigFolder.."/configs.json"
             
-                -- if not isfolder(LibArgs.ConfigFolder) then
-                    -- makefolder(LibArgs.ConfigFolder)
-                -- end
+                if not isfolder(LibArgs.ConfigFolder) then
+                    makefolder(LibArgs.ConfigFolder)
+                end
             
-                -- if isfile(config_path) then
-                    Configs = {}
-                -- else
-                    -- writefile(config_path,HttpService:JSONEncode(Configs))
-                -- end
+                if isfile(config_path) then
+                    Configs = HttpService:JSONDecode(readfile(config_path))
+                else
+                    writefile(config_path,HttpService:JSONEncode(Configs))
+                end
             
                 local lastSave = os.clock()
                 local SAVE_DELAY = 0.1
