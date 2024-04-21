@@ -2475,7 +2475,7 @@ local s, e = pcall(function()
                 local args = {
                     [1] = {
                         ["Target"] = hrp,
-                        ["cf"] = hrp.CFrame
+                        ["cf"] = hrp.CFrame * CFrame.new(0,-2.75,0);
                     }
                 }
 
@@ -2502,7 +2502,7 @@ local s, e = pcall(function()
                     h.Size = Vector3.new(15, 15, 15)
                 end
 
-                for i = 0,seg or Configs.HoroAttackSegements do
+                for i = 0,Configs.HoroAttackSegements do
                     if not h then break end
                     spawn(function()
                         local args = {
