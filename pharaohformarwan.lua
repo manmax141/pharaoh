@@ -286,7 +286,6 @@ local s, e = pcall(function()
             UI.Watermark.Visible = false
             UI.Parent = gethui()
             
-            UI.Size = UDim2.new(0.175, 0, 0.265, 0);
             
             game:GetService("UserInputService").InputBegan:Connect(function(i,p)
                 if p then return; end
